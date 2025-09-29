@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <!--Fluig-->
+        <link type="text/css" rel="stylesheet" href="/style-guide/css/fluig-style-guide.min.css" />
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="/portal/resources/js/mustache/mustache-min.js"></script>
+        <script type="text/javascript" src="/style-guide/js/fluig-style-guide.min.js" charset="utf-8"></script>
+        <script src="/webdesk/vcXMLRPC.js"></script>
+
+        <!--React-->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin="anonymous"></script>
+        <script src="react.js" crossorigin></script>
+        <script src="react-dom.js" crossorigin></script>
+
+        <!--Antd-->
+        <script src="antd.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="antd.min.css" />
+        <script src="moment.min.js"></script>
+
+        <!--Processo-->
+        <script src="ComponentesReact.jsx" type="text/babel"></script>
+        <script src="Functions.js"></script>
+    </head>
+    <body>
+        <div class="fluig-style-guide">
+            <form name="form" role="form">
+                <div id="AppRoot"></div>
+                <div style="display: none">
+                    <input type="hidden" name="numProcess" id="numProcess" />
+                    <input type="hidden" name="atividade" id="atividade" />
+                    <input type="hidden" name="solicitante" id="solicitante" />
+                    <input type="hidden" name="userCode" id="userCode" />
+                    <input type="hidden" name="formMode" id="formMode" />
+                    <input type="hidden" name="jsonSigner" id="jsonSigner" />
+                    <input type="hidden" name="docId" id="docId" />
+                    <input type="hidden" name="docName" id="docName" />
+                    <input type="hidden" name="hiddenStatusDocumento" id="hiddenStatusDocumento" />
+                    <input type="hidden" name="hiddenAprovacao" id="hiddenAprovacao" />
+                    <input type="hidden" name="SolicitanteAprovaSolicitacao" id="SolicitanteAprovaSolicitacao" />
+                </div>
+            </form>
+        </div>
+        <script src="Script.js"></script>
+        <script>
+            var beforeSendValidate = function () {
+                var valida = ValidaAntesDeEnviar();
+
+                if (valida) {
+                    if ($("#atividade").val() == 23) {
+                        if ($("#hiddenStatusDocumento").val() != "Assinado") {
+                            var confirm = window.confirm("O documento ainda não foi assinado, deseja encerrar a solicitação mesmo assim?");
+                            if (confirm) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        }
+                    }
+                }else{
+                    return false;
+                }
+            };
+        </script>
+    </body>
+</html>
