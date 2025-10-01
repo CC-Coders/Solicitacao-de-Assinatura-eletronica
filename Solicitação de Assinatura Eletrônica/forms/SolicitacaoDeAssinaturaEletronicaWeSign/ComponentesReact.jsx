@@ -30,20 +30,25 @@ console.log("Valor de SolicitanteAprovaSolicitacao:", valorSolicitanteAprova);
 
     function BuscaListaAssinantes() {
         return new Promise((resolve, reject) => {
-            DatasetFactory.getDataset("ds_wesign_assinantes", null, [], null, {
-                success: (ds) => {                   
-
-                    var assinantes = [];
-                    for (const assinante of ds.values) {
-                      // console.log("Assinante encontrado:", assinante);
-                        assinantes.push({
-                            Nome: assinante.nome,
-                            Email: hex2a(assinante.email),
-                            Cpf: hex2a(assinante.cpf)
-                        });
+            DatasetFactory.getDataset("dsCadastroAssinantesWesign", [], [], null, {
+                success: (ds) => {
+                    if (ds.values[0].STATUS != "SUCCESS") {
+                        console.error(ds);
                     }
-                    console.log("Lista de assinantes:", assinantes); 
-                    resolve(assinantes);
+                    else{
+                        var assinantes = [];
+                        var retorno = JSON.parse(ds.values[0].RESULT)
+                        for (const assinante of retorno) {
+                          // console.log("Assinante encontrado:", assinante);
+                            assinantes.push({
+                                Nome: assinante.NOME,
+                                Email: hex2a(assinante.email),
+                                Cpf: hex2a(assinante.cpf)
+                            });
+                        }
+                        console.log("Lista de assinantes:", assinantes); 
+                        resolve(assinantes);
+                    }
                 },
                 error: (err) => {
                 console.error("Erro ao carregar assinantes:", err); // Logar erros, se ocorrerem
