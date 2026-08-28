@@ -1,8 +1,9 @@
 $(document).ready(function(){
-    setTimeout(() => {
-        ReactDOM.render(React.createElement(AppRoot),  document.querySelector('#AppRoot'));
+    setTimeout(async () => {
+        // Espera o valor do SolicitanteAprovaSolicitação antes de renderizar
+        await VerificaSeSolicitanteAprovadorDeAssinatura();
 
-        VerificaSeSolicitanteAprovadorDeAssinatura();
+        ReactDOM.render(React.createElement(AppRoot), document.querySelector('#AppRoot'));
 
     }, 400);
 });
