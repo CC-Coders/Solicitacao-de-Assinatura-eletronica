@@ -1,0 +1,76 @@
+
+    .castilho-wizard {
+        padding: 0 0 18px;
+    }
+
+    .castilhoWizard-progress {
+        display: flex;
+        font-family: 'Inter', 'Open Sans', sans-serif;
+        overflow: hidden;
+        border-radius: 14px;
+        background: #fff;
+        margin-bottom: 20px;
+        width: 99%;
+    }
+
+    .castilhoWizard-progress .step {
+        position: relative;
+        flex: 1;
+        padding: 16px 20px;
+        background: linear-gradient(145deg, #f0f0f0, #dcdcdc);
+        color: #333;
+        text-align: center;
+        font-weight: 600;
+        font-size: 13px;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+        margin-left: -20px;
+        z-index: 1;
+        transition: all .3s ease;
+        white-space: nowrap;
+    }
+
+    .castilhoWizard-progress .step:first-child {
+        margin-left: 0;
+        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 50%, calc(100% - 20px) 100%, 0 100%);
+        border-top-left-radius: 14px;
+        border-bottom-left-radius: 14px;
+    }
+
+    .castilhoWizard-progress .step:last-child {
+        clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 0, 100% 100%, calc(100% - 20px) 100%, 0 100%, 20px 50%);
+        border-top-right-radius: 14px;
+        border-bottom-right-radius: 14px;
+    }
+
+    .castilhoWizard-progress .step.active {
+        background: linear-gradient(135deg, #ffe259, #ffa751);
+        color: #000;
+        z-index: 2;
+        box-shadow: 0 8px 16px rgba(255, 193, 7, 0.25);
+        transform: scale(1.02);
+    }
+
+    .castilhoWizard-progress .step.completed {
+        background: linear-gradient(to right, #43cea2, #185a9d);
+        color: #fff;
+    }
+
+    .castilhoWizard-progress .step:not(.active):hover {
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 767px) {
+        .castilhoWizard-progress {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .castilhoWizard-progress .step {
+            flex-shrink: 0;
+            font-size: 11px;
+            padding: 12px 10px;
+        }
+    }
