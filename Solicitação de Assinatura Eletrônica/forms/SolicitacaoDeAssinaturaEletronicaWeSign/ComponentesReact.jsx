@@ -7,6 +7,8 @@ function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
     const [listAssinantes, setlistAssinantes] = useState([]);
     const [RadioAprovacao, setRadioAprovacao] = useState("");
+    const [PaginaAtual, setPaginaAtual] = useState("Dados Gerais");
+
 
     useEffect(async () => {
         setlistAssinantes(await BuscaListaAssinantes());
@@ -143,61 +145,77 @@ function AppRoot() {
         return options;
     }
 
-    // var wizard = RotulosEstadosDasEtapas();
-
     return (
         <>
             <CastilhoWizard etapas={[
-                    {NOME:"Início", etapas:[0,4], regra:()=>{return true}},
-                    {NOME:"Aprovação", etapas:[5], regra:()=>{return $("#SolicitanteAprovaSolicitacao").val() != "true"}},
-                    {NOME:"Assinatura", etapas:[23], regra:()=>{return true}},
-                    {NOME:"Fim", etapas:[7, 11], regra:()=>{return true}},
-                ]} />
+                { NOME: "Início", etapas: [0, 4], regra: () => { return true } },
+                { NOME: "Aprovação", etapas: [5], regra: () => { return $("#SolicitanteAprovaSolicitacao").val() != "true" } },
+                { NOME: "Assinatura", etapas: [23], regra: () => { return true } },
+                { NOME: "Fim", etapas: [7, 11], regra: () => { return true } },
+            ]} />
 
 
-            <div className="panel panel-primary">
-                <div className="panel-heading">
-                    <h3 className="panel-title">Assinatura Eletrônica</h3>
-                </div>
-                <div className="panel-body">
-                    <div className="row">
-                        <div className="col-md-6">
-                            <AnexadorDeDocumentos />
+                {PaginaAtual == "Dados Gerais" &&
+                    <>
+                        <div className="panel panel-primary">
+                            <div className="panel-heading">
+                                <h3 className="panel-title">Assinatura Eletrônica</h3>
+                            </div>
+                            <div className="panel-body">
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <AnexadorDeDocumentos />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <SelecionadorDeAssinantes Assinantes={Assinantes} onAdicionarAssinante={(assinante) => handleAdicionarAssinantes(assinante)} onExcluirAssinante={(e) => handleExcluirAssinante(e)} onCadastrarAssinante={(e) => handleCadastrarAssinante(e)} listaAssinantes={renderOptionsAssinantes()} />
+                                        <br />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="col-md-6">
-                            <SelecionadorDeAssinantes Assinantes={Assinantes} onAdicionarAssinante={(assinante) => handleAdicionarAssinantes(assinante)} onExcluirAssinante={(e) => handleExcluirAssinante(e)} onCadastrarAssinante={(e) => handleCadastrarAssinante(e)} listaAssinantes={renderOptionsAssinantes()} />
-                            <br />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <br />
+                        <br />
 
-            {$("#atividade").val() == "5" && (
-                <div className="panel panel-primary">
-                    <div className="panel-heading">
-                        <h3 className="panel-title">Aprovação</h3>
-                    </div>
-                    <div className="panel-body">
-                        <div style={{ textAlign: "center" }}>
-                            <label htmlFor="radioAprovar">
-                                <input type="radio" name="radioAprovacao" id="radioAprovar" value={"Aprovar"} checked={RadioAprovacao == "Aprovar"} onChange={() => handleChangeInputAprovacao("Aprovar")} />
-                                Aprovar
-                            </label>
-                            <label htmlFor="radioRetornar" style={{ marginLeft: "20px", marginRight: "20px" }}>
-                                <input type="radio" name="radioAprovacao" id="radioRetornar" value={"Retornar"} checked={RadioAprovacao == "Retornar"} onChange={() => handleChangeInputAprovacao("Retornar")} />
-                                Retornar
-                            </label>
-                            <label htmlFor="radioCancelar">
-                                <input type="radio" name="radioAprovacao" id="radioCancelar" value={"Cancelar"} checked={RadioAprovacao == "Cancelar"} onChange={() => handleChangeInputAprovacao("Cancelar")} />
-                                Cancelar
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            )}
-            <br />
-            {$("#atividade").val() == "23" && <AssinaturaEletronica />}
+                        {$("#atividade").val() == "5" && (
+                            <div className="panel panel-primary">
+                                <div className="panel-heading">
+                                    <h3 className="panel-title">Aprovação</h3>
+                                </div>
+                                <div className="panel-body">
+                                    <div style={{ textAlign: "center" }}>
+                                        <label htmlFor="radioAprovar">
+                                            <input type="radio" name="radioAprovacao" id="radioAprovar" value={"Aprovar"} checked={RadioAprovacao == "Aprovar"} onChange={() => handleChangeInputAprovacao("Aprovar")} />
+                                            Aprovar
+                                        </label>
+                                        <label htmlFor="radioRetornar" style={{ marginLeft: "20px", marginRight: "20px" }}>
+                                            <input type="radio" name="radioAprovacao" id="radioRetornar" value={"Retornar"} checked={RadioAprovacao == "Retornar"} onChange={() => handleChangeInputAprovacao("Retornar")} />
+                                            Retornar
+                                        </label>
+                                        <label htmlFor="radioCancelar">
+                                            <input type="radio" name="radioAprovacao" id="radioCancelar" value={"Cancelar"} checked={RadioAprovacao == "Cancelar"} onChange={() => handleChangeInputAprovacao("Cancelar")} />
+                                            Cancelar
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <br />
+                        {$("#atividade").val() == "23" && <AssinaturaEletronica />}
+                    </>
+
+                }
+
+                {PaginaAtual == "Historico" &&
+                //TODO - Componente Historico
+                <>
+                    <h1>Historico</h1>
+                </>
+                }
+
+
+            <CastilhoFooter abas={[
+                { NOME: "Dados Gerais", SUBTITULO: "Documento . Assinantes", regra: () => { return true } },
+                { NOME: "Historico", SUBTITULO: "Movimentações do processo", regra: () => { return true } },
+            ]} paginaAtual={PaginaAtual} mudarPagina={(pagina)=>{setPaginaAtual(pagina)}} />
         </>
     );
 }
@@ -229,11 +247,73 @@ function CastilhoWizard({ etapas }) {
                             {etapa.NOME}
                         </div>
                     );
-                }else{
+                } else {
                     return null;
                 }
             })}
         </div>
+    );
+}
+
+// Define as abas do formulario e a navegacao entre elas
+function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
+
+    // Indices das abas que a regra deixa aparecer
+    function IndicesVisiveis() {
+        var visiveis = [];
+
+        abas.forEach((aba, indice) => {
+            if (aba.regra()) visiveis.push(indice);
+        });
+
+        return visiveis;
+    }
+
+    var visiveis = IndicesVisiveis();
+    var posicaoAtual = visiveis.findIndex((indice) => abas[indice].NOME === paginaAtual);
+
+    return (
+        <>
+            <div className="castilho-footer">
+                <button type="button" className="stepper-arrow left" title="Anterior"
+                    disabled={posicaoAtual <= 0} onClick={() => mudarPagina(abas[visiveis[posicaoAtual - 1]].NOME)}>
+                    <i className="fluigicon fluigicon-chevron-left icon-sm" aria-hidden="true"></i>
+                </button>
+
+                {abas.map((aba, indice) => {
+                    if (aba.regra()) {
+                        // Posicao entre as visiveis, para numerar o cartao sem contar as escondidas
+                        var posicao = visiveis.indexOf(indice);
+
+                        var classe = "step-item";
+                        if (posicao === posicaoAtual) classe += " active";
+                        if (posicao < posicaoAtual) classe += " done";
+
+                        return (
+                            <React.Fragment key={indice}>
+                                {posicao > 0 && <div className="step-connector"><div className="step-connector-line"></div></div>}
+
+                                <div className={classe} onClick={() => mudarPagina(aba.NOME)}>
+                                    <div className="step-circle">{posicao + 1}</div>
+                                    <div className="step-info">
+                                        <span className="step-label">ETAPA {posicao + 1} DE {visiveis.length}</span>
+                                        <span className="step-name">{aba.NOME}</span>
+                                        <span className="step-sub">{aba.SUBTITULO}</span>
+                                    </div>
+                                </div>
+                            </React.Fragment>
+                        );
+                    } else {
+                        return null;
+                    }
+                })}
+
+                <button type="button" className="stepper-arrow right" title="Próximo"
+                    disabled={posicaoAtual >= visiveis.length - 1} onClick={() => mudarPagina(abas[visiveis[posicaoAtual + 1]].NOME)}>
+                    <i className="fluigicon fluigicon-chevron-right icon-sm" aria-hidden="true"></i>
+                </button>
+            </div>
+        </>
     );
 }
 
