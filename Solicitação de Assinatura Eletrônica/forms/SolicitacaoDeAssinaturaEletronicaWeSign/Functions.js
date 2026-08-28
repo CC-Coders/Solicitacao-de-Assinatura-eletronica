@@ -100,18 +100,23 @@ function CadastraAssinante(nome, email, cpf) {
 }
 
 function VerificaSeSolicitanteAprovadorDeAssinatura() {
-    DatasetFactory.getDataset("workflowColleagueRole", null, [
-        DatasetFactory.createConstraint("colleagueId", $("#solicitante").val(), $("#solicitante").val(), ConstraintType.MUST),
-        DatasetFactory.createConstraint("roleId", "aprovaAssinaturasE", "aprovaAssinaturasE", ConstraintType.MUST)
-    ], null, {
-        success: (ds => {
-            if (ds.values.length > 0) {
-                $("#SolicitanteAprovaSolicitacao").val("true");
-            } else {
+    return new Promise((resolve) => {
+        DatasetFactory.getDataset("workflowColleagueRole", null, [
+            DatasetFactory.createConstraint("colleagueId", $("#solicitante").val(), $("#solicitante").val(), ConstraintType.MUST),
+            DatasetFactory.createConstraint("roleId", "aprovaAssinaturasE", "aprovaAssinaturasE", ConstraintType.MUST)
+        ], null, {
+            success: (ds => {
+                var aprova = ds.values.length > 0 ? "true" : "false";
+                $("#SolicitanteAprovaSolicitacao").val(aprova);
+                resolve(aprova);
+            }),
+            error: (err) => {
+                console.error("Erro ao verificar SolicitanteAprovaSolicitacao:", err);
                 $("#SolicitanteAprovaSolicitacao").val("false");
+                resolve("false");
             }
         })
-    })
+    });
 }
 
 function ValidaAntesDeEnviar() {
