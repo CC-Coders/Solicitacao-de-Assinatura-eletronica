@@ -1,0 +1,1272 @@
+<list>
+  <ProcessDefinition>
+    <processDefinitionPK>
+      <companyId>1</companyId>
+      <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+    </processDefinitionPK>
+    <processDescription>Solicitacao De Assinatura Eletronica WeSign</processDescription>
+    <instruction></instruction>
+    <active>true</active>
+    <publicProcess>false</publicProcess>
+    <volumeId>Default</volumeId>
+    <categoryId>Documentos</categoryId>
+    <managerEngineAllocationId>Papel</managerEngineAllocationId>
+    <managerEngineAllocationConfiguration>&lt;AssignmentController&gt;&lt;Role&gt;admin&lt;/Role&gt;&lt;/AssignmentController&gt;</managerEngineAllocationConfiguration>
+    <snapshotFrequency>0</snapshotFrequency>
+    <baseDay>0</baseDay>
+    <baseMonth>0</baseMonth>
+    <periodId>Default</periodId>
+    <uniqueCardVersion>false</uniqueCardVersion>
+    <keyWord></keyWord>
+    <complementsLevel>1</complementsLevel>
+    <notifyRequisitionerComplements>true</notifyRequisitionerComplements>
+    <notifyManagerComplements>false</notifyManagerComplements>
+    <deadlineTime>0</deadlineTime>
+    <warningDeadlineTime>0</warningDeadlineTime>
+    <notifyAuthorityComplements>true</notifyAuthorityComplements>
+  </ProcessDefinition>
+  <ProcessDefinitionVersion>
+    <processDefinitionVersionPK>
+      <companyId>1</companyId>
+      <processId>Solicitacao De Assinatura Eletronica WeSign</processId>
+      <version>41</version>
+    </processDefinitionVersionPK>
+    <versionDescription></versionDescription>
+    <formId>0</formId>
+    <formIdV2>0</formIdV2>
+    <editionMode>true</editionMode>
+    <updateAttachmentsVersion>false</updateAttachmentsVersion>
+    <controlsAttachmentsSecurity>false</controlsAttachmentsSecurity>
+    <active>true</active>
+    <blockedVersion>false</blockedVersion>
+    <counterSign>false</counterSign>
+    <openInstances>0</openInstances>
+    <bpmnVersion>2</bpmnVersion>
+    <processStates/>
+    <favorito>false</favorito>
+    <inheritFormSecurity>false</inheritFormSecurity>
+    <mobileReady>false</mobileReady>
+  </ProcessDefinitionVersion>
+  <list>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>4</sequence>
+      </processStatePK>
+      <stateName>Início</stateName>
+      <stateDescription>Início</stateDescription>
+      <instruction></instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId></engineAllocationId>
+      <engineAllocationConfiguration></engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>true</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>false</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>140</positionX>
+      <positionY>74</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>0</stateType>
+      <bpmnType>10</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <noticeExpirationAuthorityTime>0</noticeExpirationAuthorityTime>
+      <noticeExpirationRequisitionerTime>0</noticeExpirationRequisitionerTime>
+      <noticeExpirationManagerTime>0</noticeExpirationManagerTime>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>5</sequence>
+      </processStatePK>
+      <stateName>Aprovacao</stateName>
+      <stateDescription>Aprovacao</stateDescription>
+      <instruction></instruction>
+      <deadlineTime>0</deadlineTime>
+      <deadlineFieldName></deadlineFieldName>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId>Pool Papel</engineAllocationId>
+      <engineAllocationConfiguration>&lt;AssignmentController&gt;&lt;Role&gt;aprovaAssinaturasE&lt;/Role&gt;&lt;/AssignmentController&gt;</engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>true</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>370</positionX>
+      <positionY>225</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>0</stateType>
+      <bpmnType>80</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <noticeExpirationAuthorityTime>0</noticeExpirationAuthorityTime>
+      <noticeExpirationRequisitionerTime>0</noticeExpirationRequisitionerTime>
+      <noticeExpirationManagerTime>0</noticeExpirationManagerTime>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+      <executionType>0</executionType>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>23</sequence>
+      </processStatePK>
+      <stateName>Solicitante Acompanha Assinatura</stateName>
+      <stateDescription>Solicitante Acompanha Assinatura</stateDescription>
+      <instruction></instruction>
+      <deadlineTime>0</deadlineTime>
+      <deadlineFieldName></deadlineFieldName>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId>Executor Atividade</engineAllocationId>
+      <engineAllocationConfiguration>&lt;AssignmentController&gt;&lt;BaseActivity&gt;4&lt;/BaseActivity&gt;&lt;Returns&gt;Last&lt;/Returns&gt;&lt;/AssignmentController&gt;</engineAllocationConfiguration>
+      <selectColleague>1</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>3600</allowanceAuthorityTime>
+      <frequenceAuthorityTime>3600</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>true</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>527</positionX>
+      <positionY>50</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>0</stateType>
+      <bpmnType>80</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <noticeExpirationAuthorityTime>0</noticeExpirationAuthorityTime>
+      <noticeExpirationRequisitionerTime>0</noticeExpirationRequisitionerTime>
+      <noticeExpirationManagerTime>0</noticeExpirationManagerTime>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+      <executionType>2</executionType>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>10</sequence>
+      </processStatePK>
+      <stateName>Decisão</stateName>
+      <stateDescription>Decisão</stateDescription>
+      <joint>false</joint>
+      <initialState>false</initialState>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <automatic>true</automatic>
+      <positionX>280</positionX>
+      <positionY>48</positionY>
+      <inhibitTransfer>false</inhibitTransfer>
+      <stateType>1</stateType>
+      <bpmnType>120</bpmnType>
+      <signalId>0</signalId>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>15</sequence>
+      </processStatePK>
+      <stateName>Decisão</stateName>
+      <stateDescription>Decisão</stateDescription>
+      <joint>false</joint>
+      <initialState>false</initialState>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <automatic>true</automatic>
+      <positionX>550</positionX>
+      <positionY>209</positionY>
+      <inhibitTransfer>false</inhibitTransfer>
+      <stateType>1</stateType>
+      <bpmnType>120</bpmnType>
+      <signalId>0</signalId>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>7</sequence>
+      </processStatePK>
+      <stateName>Fim</stateName>
+      <stateDescription>Fim</stateDescription>
+      <instruction>Atividade final do processo</instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId></engineAllocationId>
+      <engineAllocationConfiguration></engineAllocationConfiguration>
+      <selectColleague>0</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>0</allowanceAuthorityTime>
+      <frequenceAuthorityTime>1</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>false</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>740</positionX>
+      <positionY>74</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>6</stateType>
+      <bpmnType>60</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+    <ProcessState>
+      <processStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>11</sequence>
+      </processStatePK>
+      <stateName>Fim com cancelamento de processo</stateName>
+      <stateDescription>Fim com cancelamento de processo</stateDescription>
+      <instruction>Atividade final do processo</instruction>
+      <deadlineTime>0</deadlineTime>
+      <joint>false</joint>
+      <agreementPercentage>0</agreementPercentage>
+      <engineAllocationId></engineAllocationId>
+      <engineAllocationConfiguration></engineAllocationConfiguration>
+      <selectColleague>0</selectColleague>
+      <initialState>false</initialState>
+      <notifyAuthorityDelay>true</notifyAuthorityDelay>
+      <notifyRequisitionerDelay>false</notifyRequisitionerDelay>
+      <allowanceAuthorityTime>0</allowanceAuthorityTime>
+      <frequenceAuthorityTime>1</frequenceAuthorityTime>
+      <allowanceRequisitionerTime>0</allowanceRequisitionerTime>
+      <frequenceRequisitionerTime>0</frequenceRequisitionerTime>
+      <transferAttachments>false</transferAttachments>
+      <subProcessId></subProcessId>
+      <formFolder>0</formFolder>
+      <notifyAuthorityFollowUp>false</notifyAuthorityFollowUp>
+      <notifyRequisitionerFollowUp>false</notifyRequisitionerFollowUp>
+      <automatic>false</automatic>
+      <positionX>740</positionX>
+      <positionY>235</positionY>
+      <forecastedEffortType>0</forecastedEffortType>
+      <forecastedEffort>0</forecastedEffort>
+      <notifyManagerFollowUp>false</notifyManagerFollowUp>
+      <notifyManagerDelay>false</notifyManagerDelay>
+      <allowanceManagerTime>0</allowanceManagerTime>
+      <frequenceManagerTime>0</frequenceManagerTime>
+      <inhibitTransfer>false</inhibitTransfer>
+      <periodId></periodId>
+      <stateType>6</stateType>
+      <bpmnType>65</bpmnType>
+      <signalId>0</signalId>
+      <counterSign>false</counterSign>
+      <openInstances>0</openInstances>
+      <destinationStates/>
+      <digitalSignature>false</digitalSignature>
+    </ProcessState>
+  </list>
+  <list>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <expressionOrder>1</expressionOrder>
+        <version>41</version>
+        <sequence>10</sequence>
+      </conditionProcessStatePK>
+      <condition>false</condition>
+      <destinationSequenceId>23</destinationSequenceId>
+      <conditionType>1</conditionType>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <expressionOrder>2</expressionOrder>
+        <version>41</version>
+        <sequence>10</sequence>
+      </conditionProcessStatePK>
+      <condition>false</condition>
+      <destinationSequenceId>5</destinationSequenceId>
+      <conditionType>1</conditionType>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <expressionOrder>1</expressionOrder>
+        <version>41</version>
+        <sequence>15</sequence>
+      </conditionProcessStatePK>
+      <condition>false</condition>
+      <destinationSequenceId>23</destinationSequenceId>
+      <conditionType>1</conditionType>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <expressionOrder>2</expressionOrder>
+        <version>41</version>
+        <sequence>15</sequence>
+      </conditionProcessStatePK>
+      <condition>false</condition>
+      <destinationSequenceId>11</destinationSequenceId>
+      <conditionType>1</conditionType>
+    </ConditionProcessState>
+    <ConditionProcessState>
+      <conditionProcessStatePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <expressionOrder>3</expressionOrder>
+        <version>41</version>
+        <sequence>15</sequence>
+      </conditionProcessStatePK>
+      <condition>false</condition>
+      <destinationSequenceId>4</destinationSequenceId>
+      <engineAllocationConfiguration>&lt;AssignmentController&gt;&lt;BaseActivity&gt;4&lt;/BaseActivity&gt;&lt;Returns&gt;Last&lt;/Returns&gt;&lt;/AssignmentController&gt;</engineAllocationConfiguration>
+      <engineAllocationId>Executor Atividade</engineAllocationId>
+      <conditionType>1</conditionType>
+    </ConditionProcessState>
+  </list>
+  <list>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>12</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>4</initialStateSequence>
+      <finalStateSequence>10</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>13</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>10</initialStateSequence>
+      <finalStateSequence>5</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>14</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>10</initialStateSequence>
+      <finalStateSequence>23</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>16</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>5</initialStateSequence>
+      <finalStateSequence>15</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>17</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>15</initialStateSequence>
+      <finalStateSequence>23</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>18</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>15</initialStateSequence>
+      <finalStateSequence>11</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>19</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>23</initialStateSequence>
+      <finalStateSequence>7</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+    </ProcessLink>
+    <ProcessLink>
+      <processLinkPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <linkSequence>20</linkSequence>
+      </processLinkPK>
+      <actionLabel></actionLabel>
+      <returnPermited>false</returnPermited>
+      <initialStateSequence>15</initialStateSequence>
+      <finalStateSequence>4</finalStateSequence>
+      <returnLabel></returnLabel>
+      <name></name>
+      <automaticLink>false</automaticLink>
+      <defaultLink>false</defaultLink>
+      <type>0</type>
+      <movementTitle></movementTitle>
+      <movementDescription></movementDescription>
+      <movementAccessLinkDescription></movementAccessLinkDescription>
+    </ProcessLink>
+  </list>
+  <list/>
+  <list>
+    <WorkflowProcessEvent>
+      <workflowProcessEventPK>
+        <companyId>1</companyId>
+        <eventId>beforeTaskSave</eventId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+      </workflowProcessEventPK>
+      <eventDescription>// TAE&#xd;
+function beforeTaskSave(colleagueId, nextSequenceId, userList) {&#xd;
+    var atividade = String(getValue(&quot;WKNumState&quot;));&#xd;
+&#xd;
+    if (atividade == &quot;0&quot; || atividade == &quot;4&quot;) {&#xd;
+        hAPI.setCardValue(&#xd;
+            &quot;numProcess&quot;,&#xd;
+            getValue(&quot;WKNumProces&quot;)&#xd;
+        );&#xd;
+&#xd;
+        AnexarDocumento(&#xd;
+            hAPI.getCardValue(&quot;docId&quot;)&#xd;
+        );&#xd;
+    }&#xd;
+&#xd;
+    var devePublicarTAE =&#xd;
+        (atividade == &quot;5&quot; &amp;&amp;&#xd;
+            hAPI.getCardValue(&quot;hiddenAprovacao&quot;) == &quot;Aprovar&quot;) ||&#xd;
+        ((atividade == &quot;0&quot; || atividade == &quot;4&quot;) &amp;&amp;&#xd;
+            hAPI.getCardValue(&quot;SolicitanteAprovaSolicitacao&quot;) == &quot;true&quot;);&#xd;
+&#xd;
+    if (devePublicarTAE) {&#xd;
+        var token = ObterTokenTAE();&#xd;
+&#xd;
+        var idDocumento = UploadDocumentoTAE(&#xd;
+            hAPI.getCardValue(&quot;docId&quot;),&#xd;
+            hAPI.getCardValue(&quot;docName&quot;),&#xd;
+            token&#xd;
+        );&#xd;
+&#xd;
+        log.info(&#xd;
+            &quot;beforeTaskSave - Upload TAE concluido. idDocumento: &quot; +&#xd;
+            idDocumento&#xd;
+        );&#xd;
+&#xd;
+        var agora = new java.util.Date();&#xd;
+        hAPI.setCardValue(&quot;taeEnvelopeId&quot;, String(idDocumento));&#xd;
+        hAPI.setCardValue(&quot;taeDataEnvio&quot;, new java.text.SimpleDateFormat(&quot;dd/MM/yyyy&quot;).format(agora));&#xd;
+        hAPI.setCardValue(&quot;taeHoraEnvio&quot;, new java.text.SimpleDateFormat(&quot;HH:mm&quot;).format(agora));&#xd;
+&#xd;
+        var envelopeInfo = ConsultarEnvelopeTAE(&#xd;
+            idDocumento,&#xd;
+            token&#xd;
+        );&#xd;
+&#xd;
+        log.info(&#xd;
+            &quot;beforeTaskSave - Envelope TAE consultado. Status: &quot; +&#xd;
+            envelopeInfo.status&#xd;
+        );&#xd;
+&#xd;
+        PublicarEnvelopeTAE(&#xd;
+            idDocumento,&#xd;
+            hAPI.getCardValue(&quot;jsonSigner&quot;),&#xd;
+            token&#xd;
+        );&#xd;
+&#xd;
+        log.info(&#xd;
+            &quot;beforeTaskSave - Envelope TAE publicado com sucesso.&quot;&#xd;
+        );&#xd;
+    }&#xd;
+}&#xd;
+&#xd;
+// CHAMA SERVIÇO&#xd;
+function ChamarTAE(endpoint, method, token, params) {&#xd;
+    var clientService = fluigAPI.getAuthorizeClientService();&#xd;
+&#xd;
+    var requisicao = {&#xd;
+        companyId: String(getValue(&quot;WKCompany&quot;)),&#xd;
+        serviceCode: &quot;TAE&quot;,&#xd;
+        endpoint: endpoint,&#xd;
+        method: method,&#xd;
+        timeoutService: &quot;200&quot;,&#xd;
+        headers: {&#xd;
+            &quot;Content-Type&quot;: &quot;application/json&quot;,&#xd;
+            &quot;Authorization&quot;: &quot;Bearer &quot; + token,&#xd;
+            &quot;Accept&quot;: &quot;application/json&quot;&#xd;
+        }&#xd;
+    };&#xd;
+&#xd;
+    if (params != null) {&#xd;
+        requisicao.params = params;&#xd;
+    }&#xd;
+&#xd;
+    var resposta = clientService.invoke(&#xd;
+        JSON.stringify(requisicao)&#xd;
+    );&#xd;
+&#xd;
+    var statusCode = String(&#xd;
+        resposta.getHttpStatusResult()&#xd;
+    );&#xd;
+&#xd;
+    var resultadoRaw = resposta.getResult();&#xd;
+&#xd;
+    if (resultadoRaw == null || resultadoRaw == &quot;&quot;) {&#xd;
+        throw &quot;TAE nao retornou resposta. HTTP &quot; +&#xd;
+            statusCode;&#xd;
+    }&#xd;
+&#xd;
+    var resultado;&#xd;
+&#xd;
+    try {&#xd;
+        resultado = JSON.parse(resultadoRaw);&#xd;
+    } catch (e) {&#xd;
+        throw &quot;Resposta invalida retornada pelo TAE. HTTP &quot; +&#xd;
+            statusCode +&#xd;
+            &quot;. Retorno: &quot; +&#xd;
+            resultadoRaw;&#xd;
+    }&#xd;
+&#xd;
+    if (statusCode != &quot;200&quot;) {&#xd;
+        throw &quot;Erro na comunicacao com o TAE. HTTP &quot; +&#xd;
+            statusCode +&#xd;
+            &quot;. Retorno: &quot; +&#xd;
+            JSON.stringify(resultado);&#xd;
+    }&#xd;
+&#xd;
+    return resultado;&#xd;
+}&#xd;
+&#xd;
+// OBTEM TOKEN&#xd;
+function ObterTokenTAE() {&#xd;
+    var ds = DatasetFactory.getDataset(&#xd;
+        &quot;dsLoginTokenTAE&quot;,&#xd;
+        null,&#xd;
+        null,&#xd;
+        null&#xd;
+    );&#xd;
+&#xd;
+    if (ds == null ||&#xd;
+        ds.values == null ||&#xd;
+        ds.values.length === 0) {&#xd;
+&#xd;
+        log.error(&#xd;
+            &quot;ObterTokenTAE - dsLoginTokenTAE nao retornou resultado.&quot;&#xd;
+        );&#xd;
+&#xd;
+        throw &quot;Nao foi possivel autenticar no TOTVS Assinatura Eletronica: &quot; +&#xd;
+            &quot;dsLoginTokenTAE vazio&quot;;&#xd;
+    }&#xd;
+&#xd;
+    // O dataset jornalizado acumula uma linha por sincronizacao, entao a linha 0&#xd;
+    // costuma ser a mais antiga (token ja vencido). Percorremos todas as linhas&#xd;
+    // e escolhemos a de expiracao mais distante.&#xd;
+    var melhorToken = null;&#xd;
+    var melhorExpiracao = null;&#xd;
+&#xd;
+    for (var i = 0; i &lt; ds.values.length; i++) {&#xd;
+        var tokenLinha = ds.getValue(i, &quot;token&quot;);&#xd;
+        var expiracaoLinha = ds.getValue(i, &quot;expirationDate&quot;);&#xd;
+&#xd;
+        if (tokenLinha == null ||&#xd;
+            tokenLinha == &quot;&quot; ||&#xd;
+            String(tokenLinha).indexOf(&quot;ERRO&quot;) === 0) {&#xd;
+            continue;&#xd;
+        }&#xd;
+&#xd;
+        var dataExpiracao = ConverteDataExpiracaoTAE(expiracaoLinha);&#xd;
+&#xd;
+        if (dataExpiracao == null) {&#xd;
+            continue;&#xd;
+        }&#xd;
+&#xd;
+        if (melhorExpiracao == null ||&#xd;
+            dataExpiracao.after(melhorExpiracao)) {&#xd;
+&#xd;
+            melhorExpiracao = dataExpiracao;&#xd;
+            melhorToken = tokenLinha;&#xd;
+        }&#xd;
+    }&#xd;
+&#xd;
+    if (melhorToken == null) {&#xd;
+        log.error(&#xd;
+            &quot;ObterTokenTAE - Nenhum token valido entre as &quot; +&#xd;
+            ds.values.length + &quot; linhas do dataset.&quot;&#xd;
+        );&#xd;
+&#xd;
+        throw &quot;Nao foi possivel autenticar no TOTVS Assinatura Eletronica: &quot; +&#xd;
+            &quot;nenhum token valido no dataset&quot;;&#xd;
+    }&#xd;
+&#xd;
+    if (melhorExpiracao.before(new java.util.Date())) {&#xd;
+        log.error(&#xd;
+            &quot;ObterTokenTAE - Token expirado em &quot; + melhorExpiracao&#xd;
+        );&#xd;
+&#xd;
+        throw &quot;Token do TOTVS Assinatura Eletronica expirado em &quot; +&#xd;
+            melhorExpiracao +&#xd;
+            &quot;. Sincronize o dataset dsLoginTokenTAE.&quot;;&#xd;
+    }&#xd;
+&#xd;
+    log.info(&#xd;
+        &quot;ObterTokenTAE - Token valido ate &quot; + melhorExpiracao&#xd;
+    );&#xd;
+&#xd;
+    return String(melhorToken);&#xd;
+}&#xd;
+&#xd;
+// O TAE devolve a expiracao em ISO-8601 UTC, com fracao de segundo de tamanho&#xd;
+// variavel. Cortamos em 19 caracteres para ficar no formato fixo do parser.&#xd;
+function ConverteDataExpiracaoTAE(expiracao) {&#xd;
+    if (expiracao == null || expiracao == &quot;&quot;) {&#xd;
+        return null;&#xd;
+    }&#xd;
+&#xd;
+    var texto = String(expiracao);&#xd;
+&#xd;
+    if (texto.length &lt; 19) {&#xd;
+        return null;&#xd;
+    }&#xd;
+&#xd;
+    try {&#xd;
+        var formato = new java.text.SimpleDateFormat(&#xd;
+            &quot;yyyy-MM-dd&apos;T&apos;HH:mm:ss&quot;&#xd;
+        );&#xd;
+&#xd;
+        formato.setTimeZone(&#xd;
+            java.util.TimeZone.getTimeZone(&quot;UTC&quot;)&#xd;
+        );&#xd;
+&#xd;
+        return formato.parse(texto.substring(0, 19));&#xd;
+    } catch (e) {&#xd;
+        log.warn(&#xd;
+            &quot;ConverteDataExpiracaoTAE - Nao foi possivel interpretar: &quot; + texto&#xd;
+        );&#xd;
+        return null;&#xd;
+    }&#xd;
+}&#xd;
+&#xd;
+// UPLOAD DO DOCUMENTO&#xd;
+function UploadDocumentoTAE(docId, docName, token) {&#xd;
+    var files = JSON.stringify([{&#xd;
+        documentId: Number(docId),&#xd;
+        application: &quot;application/pdf&quot;,&#xd;
+        fileName: String(docName)&#xd;
+    }]);&#xd;
+&#xd;
+    var ds = DatasetFactory.getDataset(&#xd;
+        &quot;dsTAEUploadArquivo&quot;,&#xd;
+        [&#xd;
+            files,&#xd;
+            token,&#xd;
+            String(docName),&#xd;
+            &quot;https://totvssign.staging.totvs.app&quot;&#xd;
+        ],&#xd;
+        null,&#xd;
+        null&#xd;
+    );&#xd;
+&#xd;
+    if (ds == null ||&#xd;
+        ds.values == null ||&#xd;
+        ds.values.length === 0) {&#xd;
+&#xd;
+        throw &quot;Erro ao fazer upload do documento no TAE: &quot; +&#xd;
+            &quot;dsTAEUploadArquivo nao retornou resultado.&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var status = String(&#xd;
+        ds.getValue(0, &quot;status&quot;)&#xd;
+    );&#xd;
+&#xd;
+    var mensagem = ds.getValue(&#xd;
+        0,&#xd;
+        &quot;mensagem&quot;&#xd;
+    );&#xd;
+&#xd;
+    if (status != &quot;200&quot;) {&#xd;
+        throw &quot;Erro ao fazer upload do documento no TAE: &quot; +&#xd;
+            mensagem;&#xd;
+    }&#xd;
+&#xd;
+    var detalhesRaw = ds.getValue(&#xd;
+        0,&#xd;
+        &quot;detalhes&quot;&#xd;
+    );&#xd;
+&#xd;
+    if (detalhesRaw == null ||&#xd;
+        detalhesRaw == &quot;&quot;) {&#xd;
+&#xd;
+        throw &quot;Erro ao fazer upload do documento no TAE: &quot; +&#xd;
+            &quot;campo detalhes nao retornado.&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var detalhes;&#xd;
+&#xd;
+    try {&#xd;
+        detalhes = JSON.parse(&#xd;
+            detalhesRaw&#xd;
+        );&#xd;
+    } catch (e) {&#xd;
+        throw &quot;Erro ao interpretar resposta do upload no TAE: &quot; +&#xd;
+            detalhesRaw;&#xd;
+    }&#xd;
+&#xd;
+    if (!detalhes.success ||&#xd;
+        detalhes.data == null) {&#xd;
+&#xd;
+        throw &quot;Erro ao fazer upload do documento no TAE: &quot; +&#xd;
+            JSON.stringify(&#xd;
+                detalhes.errors ||&#xd;
+                detalhes.message&#xd;
+            );&#xd;
+    }&#xd;
+&#xd;
+    return detalhes.data;&#xd;
+}&#xd;
+&#xd;
+// CONSULTA ENVELOPE&#xd;
+function ConsultarEnvelopeTAE(idDocumento, token) {&#xd;
+    var ds = DatasetFactory.getDataset(&#xd;
+        &quot;dsTAEEnvelopeInfo&quot;,&#xd;
+        null,&#xd;
+        [&#xd;
+            DatasetFactory.createConstraint(&#xd;
+                &quot;envelopeId&quot;,&#xd;
+                String(idDocumento),&#xd;
+                String(idDocumento),&#xd;
+                ConstraintType.MUST&#xd;
+            ),&#xd;
+&#xd;
+            DatasetFactory.createConstraint(&#xd;
+                &quot;token&quot;,&#xd;
+                token,&#xd;
+                token,&#xd;
+                ConstraintType.MUST&#xd;
+            )&#xd;
+        ],&#xd;
+        null&#xd;
+    );&#xd;
+&#xd;
+    if (ds == null ||&#xd;
+        ds.values == null ||&#xd;
+        ds.values.length === 0) {&#xd;
+&#xd;
+        throw &quot;Nao foi possivel consultar o envelope TAE &quot; +&#xd;
+            &quot;(idDocumento &quot; +&#xd;
+            idDocumento +&#xd;
+            &quot;)&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var dados = ds.getValue(&#xd;
+        0,&#xd;
+        &quot;data&quot;&#xd;
+    );&#xd;
+&#xd;
+    var descricao = ds.getValue(&#xd;
+        0,&#xd;
+        &quot;description&quot;&#xd;
+    );&#xd;
+&#xd;
+    if (dados == null ||&#xd;
+        dados == &quot;&quot; ||&#xd;
+        dados == &quot;{}&quot;) {&#xd;
+&#xd;
+        throw &quot;Envelope TAE nao retornou dados: &quot; +&#xd;
+            descricao;&#xd;
+    }&#xd;
+&#xd;
+    try {&#xd;
+        return JSON.parse(dados);&#xd;
+    } catch (e) {&#xd;
+        throw &quot;Erro ao interpretar os dados do envelope TAE: &quot; +&#xd;
+            dados;&#xd;
+    }&#xd;
+}&#xd;
+&#xd;
+&#xd;
+// VERIFICA TIPO DE AUTENTICACAO&#xd;
+function VerificarTipoAutenticacaoTAE(email, token) {&#xd;
+    // 1 = usuario possui conta no TAE&#xd;
+    // 2 = usuario nao possui conta e utiliza codigo por e-mail&#xd;
+    if (email == null || email == &quot;&quot;) {&#xd;
+        throw &quot;Nao foi possivel verificar autenticacao TAE: &quot; +&#xd;
+            &quot;e-mail nao informado.&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var endpoint =&#xd;
+        &quot;/signintegration/v2/Usuarios/email-list?Filter=&quot; +&#xd;
+        encodeURIComponent(email) +&#xd;
+        &quot;&amp;Take=10&quot;;&#xd;
+&#xd;
+    var json = ChamarTAE(&#xd;
+        endpoint,&#xd;
+        &quot;GET&quot;,&#xd;
+        token,&#xd;
+        null&#xd;
+    );&#xd;
+&#xd;
+    if (!json.success) {&#xd;
+        throw &quot;Erro ao verificar cadastro no TAE do destinatario &quot; +&#xd;
+            email +&#xd;
+            &quot;: &quot; +&#xd;
+            (json.message ||&#xd;
+                JSON.stringify(json.errors));&#xd;
+    }&#xd;
+&#xd;
+    var possuiConta =&#xd;
+        json.data != null &amp;&amp;&#xd;
+        json.data.length &gt; 0;&#xd;
+&#xd;
+    return possuiConta ? 1 : 2;&#xd;
+}&#xd;
+&#xd;
+// PUBLICA ENVELOPE&#xd;
+function PublicarEnvelopeTAE(&#xd;
+    idDocumento,&#xd;
+    jsonSigner,&#xd;
+    token&#xd;
+) {&#xd;
+    var signatarios;&#xd;
+&#xd;
+    try {&#xd;
+        signatarios = JSON.parse(&#xd;
+            jsonSigner&#xd;
+        );&#xd;
+    } catch (e) {&#xd;
+        throw &quot;jsonSigner invalido: &quot; +&#xd;
+            jsonSigner;&#xd;
+    }&#xd;
+&#xd;
+    if (signatarios == null ||&#xd;
+        signatarios.length === 0) {&#xd;
+&#xd;
+        throw &quot;Nenhum destinatario informado (jsonSigner vazio)&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var destinatarios = [];&#xd;
+&#xd;
+    for (var i = 0; i &lt; signatarios.length; i++) {&#xd;
+        var signatario = signatarios[i];&#xd;
+&#xd;
+        if (signatario == null) {&#xd;
+            throw &quot;Destinatario &quot; +&#xd;
+                (i + 1) +&#xd;
+                &quot; invalido.&quot;;&#xd;
+        }&#xd;
+&#xd;
+        if (signatario.email == null ||&#xd;
+            signatario.email == &quot;&quot;) {&#xd;
+&#xd;
+            throw &quot;Destinatario &quot; +&#xd;
+                (i + 1) +&#xd;
+                &quot; sem e-mail.&quot;;&#xd;
+        }&#xd;
+&#xd;
+        if (signatario.nome == null ||&#xd;
+            signatario.nome == &quot;&quot;) {&#xd;
+&#xd;
+            throw &quot;Destinatario &quot; +&#xd;
+                (i + 1) +&#xd;
+                &quot; sem nome.&quot;;&#xd;
+        }&#xd;
+&#xd;
+        if (signatario.cpf == null ||&#xd;
+            signatario.cpf == &quot;&quot;) {&#xd;
+&#xd;
+            throw &quot;Destinatario &quot; +&#xd;
+                (i + 1) +&#xd;
+                &quot; sem CPF/CNPJ.&quot;;&#xd;
+        }&#xd;
+&#xd;
+        var tipoAutenticacao =&#xd;
+            VerificarTipoAutenticacaoTAE(&#xd;
+                signatario.email,&#xd;
+                token&#xd;
+            );&#xd;
+&#xd;
+        destinatarios.push({&#xd;
+            email: signatario.email,&#xd;
+&#xd;
+            // 0 = assinar&#xd;
+            acao: 0,&#xd;
+&#xd;
+            workflow: 1,&#xd;
+&#xd;
+            papelAssinante: &quot;como assinante&quot;,&#xd;
+&#xd;
+            nomeCompleto: signatario.nome,&#xd;
+&#xd;
+            tipoAutenticacao: tipoAutenticacao,&#xd;
+&#xd;
+            // 1 = CPF/CNPJ&#xd;
+            tipoIdentificacao: 1,&#xd;
+&#xd;
+            identificacao: signatario.cpf,&#xd;
+&#xd;
+            notificaEnvio: true,&#xd;
+&#xd;
+            // 1 = e-mail&#xd;
+            tipoEnvioDocumento: 1,&#xd;
+&#xd;
+            // 1 = e-mail&#xd;
+            // Somente quando autenticacao = 2&#xd;
+            tipoEnvioCodigo:&#xd;
+                tipoAutenticacao == 2 ? 1 : null,&#xd;
+&#xd;
+            telefone: null&#xd;
+        });&#xd;
+    }&#xd;
+&#xd;
+    var corpo = {&#xd;
+        idDocumento: Number(idDocumento),&#xd;
+&#xd;
+        utilizaWorkflow: false,&#xd;
+&#xd;
+        destinatarios: destinatarios,&#xd;
+&#xd;
+        observadores: [],&#xd;
+&#xd;
+        publicacaoOpcoes: {&#xd;
+            dataExpiracao: null,&#xd;
+&#xd;
+            solicitaAssinaturaManuscrita: false,&#xd;
+&#xd;
+            assuntoMensagem: &quot;&quot;,&#xd;
+&#xd;
+            corpoMensagem: &quot;&quot;,&#xd;
+&#xd;
+            permiteRejeitarDocumento: true,&#xd;
+&#xd;
+            intervaloLembrete: 0&#xd;
+        }&#xd;
+    };&#xd;
+&#xd;
+    var resposta = ChamarTAE(&#xd;
+        &quot;/documents/v1/publicacoes&quot;,&#xd;
+        &quot;POST&quot;,&#xd;
+        token,&#xd;
+        corpo&#xd;
+    );&#xd;
+&#xd;
+    if (!resposta.success) {&#xd;
+        throw &quot;Erro ao publicar envelope no TAE: &quot; +&#xd;
+            JSON.stringify(&#xd;
+                resposta.errors ||&#xd;
+                resposta.message ||&#xd;
+                resposta&#xd;
+            );&#xd;
+    }&#xd;
+&#xd;
+    return resposta;&#xd;
+}&#xd;
+&#xd;
+// ANEXA DOCUMENTO&#xd;
+function AnexarDocumento(idDocumento) {&#xd;
+    var attachments = hAPI.listAttachments();&#xd;
+&#xd;
+    for (var i = 0; i &lt; attachments.size(); i++) {&#xd;
+        var documentoAnexado =&#xd;
+            attachments&#xd;
+                .get(i)&#xd;
+                .getDocumentId();&#xd;
+&#xd;
+        if (Number(idDocumento) ==&#xd;
+            Number(documentoAnexado)) {&#xd;
+&#xd;
+            return;&#xd;
+        }&#xd;
+    }&#xd;
+&#xd;
+    hAPI.attachDocument(&#xd;
+        idDocumento&#xd;
+    );&#xd;
+}&#xd;
+</eventDescription>
+    </WorkflowProcessEvent>
+  </list>
+  <list/>
+  <list>
+    <SwimLane>
+      <color>FFFFFF</color>
+      <height>321</height>
+      <width>901</width>
+      <positionX>60</positionX>
+      <positionY>10</positionY>
+      <stateName>Solicitacao De Assinatura Eletronica</stateName>
+      <type>1</type>
+      <parentSequence>0</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>1</sequence>
+      </swimLanePK>
+    </SwimLane>
+    <SwimLane>
+      <color>9F9F9F</color>
+      <height>160</height>
+      <width>871</width>
+      <positionX>90</positionX>
+      <positionY>10</positionY>
+      <stateName>Solicitante</stateName>
+      <type>2</type>
+      <parentSequence>1</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>2</sequence>
+      </swimLanePK>
+    </SwimLane>
+    <SwimLane>
+      <color>FFFF80</color>
+      <height>161</height>
+      <width>871</width>
+      <positionX>90</positionX>
+      <positionY>170</positionY>
+      <stateName>Aprovação</stateName>
+      <type>2</type>
+      <parentSequence>1</parentSequence>
+      <swimLanePK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>1</version>
+        <sequence>3</sequence>
+      </swimLanePK>
+    </SwimLane>
+  </list>
+  <list/>
+  <list/>
+  <list>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>41</version>
+        <linkSequence>13</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>310</positionX>
+      <positionY>253</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>41</version>
+        <linkSequence>20</linkSequence>
+        <bendSequence>1</bendSequence>
+      </processLinkBendPK>
+      <positionX>579</positionX>
+      <positionY>322</positionY>
+    </ProcessLinkBend>
+    <ProcessLinkBend>
+      <processLinkBendPK>
+        <companyId>1</companyId>
+        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <version>41</version>
+        <linkSequence>20</linkSequence>
+        <bendSequence>2</bendSequence>
+      </processLinkBendPK>
+      <positionX>157</positionX>
+      <positionY>322</positionY>
+    </ProcessLinkBend>
+  </list>
+  <list/>
+  <list/>
+  <list/>
+  <list/>
+  <list/>
+  <list/>
+  <list/>
+  <list>
+    <ConditionProcessAutomaticRules>
+      <sequence>10</sequence>
+      <expressionOrder>1</expressionOrder>
+      <ruleOrder>1</ruleOrder>
+      <field>SolicitanteAprovaSolicitacao</field>
+      <value>true</value>
+      <operator>1</operator>
+      <valueType>1</valueType>
+    </ConditionProcessAutomaticRules>
+    <ConditionProcessAutomaticRules>
+      <sequence>10</sequence>
+      <expressionOrder>2</expressionOrder>
+      <ruleOrder>1</ruleOrder>
+      <field>SolicitanteAprovaSolicitacao</field>
+      <value>false</value>
+      <operator>1</operator>
+      <valueType>1</valueType>
+    </ConditionProcessAutomaticRules>
+    <ConditionProcessAutomaticRules>
+      <sequence>15</sequence>
+      <expressionOrder>1</expressionOrder>
+      <ruleOrder>1</ruleOrder>
+      <field>hiddenAprovacao</field>
+      <value>Aprovar</value>
+      <operator>1</operator>
+      <valueType>1</valueType>
+    </ConditionProcessAutomaticRules>
+    <ConditionProcessAutomaticRules>
+      <sequence>15</sequence>
+      <expressionOrder>2</expressionOrder>
+      <ruleOrder>1</ruleOrder>
+      <field>hiddenAprovacao</field>
+      <value>Cancelar</value>
+      <operator>1</operator>
+      <valueType>1</valueType>
+    </ConditionProcessAutomaticRules>
+    <ConditionProcessAutomaticRules>
+      <sequence>15</sequence>
+      <expressionOrder>3</expressionOrder>
+      <ruleOrder>1</ruleOrder>
+      <field>hiddenAprovacao</field>
+      <value>Retornar</value>
+      <operator>1</operator>
+      <valueType>1</valueType>
+    </ConditionProcessAutomaticRules>
+  </list>
+</list>

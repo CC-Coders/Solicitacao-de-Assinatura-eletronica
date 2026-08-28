@@ -1,6 +1,5 @@
 const useEffect = React.useEffect;
 const useState = React.useState;
-const useCallback = React.useCallback;
 const Select = antd.Select;
 
 function AppRoot() {
@@ -25,9 +24,6 @@ function AppRoot() {
         }
     }
 
-    var valorSolicitanteAprova = document.getElementById("SolicitanteAprovaSolicitacao").value;
-console.log("Valor de SolicitanteAprovaSolicitacao:", valorSolicitanteAprova);
-
     function BuscaListaAssinantes() {
         return new Promise((resolve, reject) => {
             DatasetFactory.getDataset("dsCadastroAssinantesWesign", [], [], null, {
@@ -39,7 +35,6 @@ console.log("Valor de SolicitanteAprovaSolicitacao:", valorSolicitanteAprova);
                         var assinantes = [];
                         var retorno = JSON.parse(ds.values[0].RESULT)
                         for (const assinante of retorno) {
-                          // console.log("Assinante encontrado:", assinante);
                             assinantes.push({
                                 Nome: assinante.NOME,
                                 Email: hex2a(assinante.email),
@@ -191,7 +186,7 @@ console.log("Valor de SolicitanteAprovaSolicitacao:", valorSolicitanteAprova);
                 </div>
             )}
             <br />
-            {$("#atividade").val() == "23" && <AssinaturaEletronica NomeArquivo={"Teste.pdf"} ChaveArquivo={"28956748941894894894"} DataEnvio={"19/04/2023"} HorarioEnvio={"14:23"} Status={"Pendente Assinatura"} />}
+            {$("#atividade").val() == "23" && <AssinaturaEletronica />}
         </>
     );
 }
@@ -207,7 +202,6 @@ function AnexadorDeDocumentos() {
         setDescricaoDocumento("Carregando.....");
         criaDocNoFluig(e.target.files[0])
             .then((result) => {
-                console.log();
                 $("#docId").val(result[0]);
                 $("#docName").val(result[1]);
                 setDescricaoDocumento(result[1]);
@@ -438,119 +432,347 @@ function CpfInput({ onChange, value }) {
     );
 }
 
-function AssinaturaEletronica({ NomeArquivo, ChaveArquivo, jsonAssinantes, DataEnvio, HorarioEnvio, Status }) {
-    const [Assinatura, setAssinatura] = useState({
-        NomeArquivo: "",
-        ChaveArquivo: "",
-        jsonAssinantes: "",
-        DataEnvio: "",
-        HorarioEnvio: "",
-        Status: ""
-    });
-    const [UrlDocumento, setUrlDocumento] = useState("");
+function SelecionaTokenTAEMaisRecente(dsToken) {
+    if (!dsToken || !dsToken.values || dsToken.values.length === 0) {
+        return null;
+    }
 
-    const [UrlAnexo, setUrlAnexo] = useState("");
+    var melhorToken = null;
+    var melhorExpiracao = null;
+
+    dsToken.values.forEach(function (linha) {
+        var token = linha && linha.token;
+        if (!token || String(token).indexOf("ERRO") === 0) return;
+
+        var expiracao = new Date(FormataExpiracaoTAE(linha.expirationDate));
+        if (isNaN(expiracao.getTime())) return;
+
+        if (melhorExpiracao == null || expiracao > melhorExpiracao) {
+            melhorExpiracao = expiracao;
+            melhorToken = token;
+        }
+    });
+
+    if (melhorToken == null || melhorExpiracao < new Date()) {
+        console.error("Token TAE indisponivel ou expirado em:", melhorExpiracao);
+        return null;
+    }
+
+    return melhorToken;
+}
+
+// O TAE devolve a expiracao em UTC, nem sempre com o sufixo Z.
+function FormataExpiracaoTAE(expiracao) {
+    var texto = String(expiracao || "");
+    if (texto && texto.indexOf("Z") === -1 && texto.indexOf("+") === -1) {
+        texto += "Z";
+    }
+    return texto;
+}
+
+// Monta a lista de assinantes a partir do envelope do TAE.
+function MontaListaAssinantes(dadosTAE, linksPorEmail) {
+    var lista = [];
+
+    (dadosTAE.assinantes || []).forEach(function (a) {
+        lista.push({
+            nome: a.nome,
+            email: a.email,
+            cpf: a.cpfCnpj,
+            data: a.data,
+            status: "Assinado"
+        });
+    });
+
+    (dadosTAE.pendentes || []).forEach(function (p) {
+        // Evita duplicar quem ja esta na lista de assinantes
+        if (lista.some(function (a) { return a.email == p.email; })) return;
+        lista.push({
+            nome: p.nome || "",
+            email: p.email,
+            cpf: p.cpfCnpj || "",
+            data: "",
+            status: "Pendente"
+        });
+    });
+
+    var doFormulario = LeAssinantesDoFormulario();
+
+    if (lista.length === 0) {
+        return doFormulario;
+    }
+
+    lista.forEach(function (a) {
+        var informado = doFormulario.find(function (s) { return s.email == a.email; });
+        if (!informado) return;
+
+        if (!a.nome) a.nome = informado.nome;
+        if (!a.cpf) a.cpf = informado.cpf;
+    });
+
+    // Garante nome visivel mesmo quando nao ha correspondencia no formulario
+    lista.forEach(function (a) {
+        if (!a.nome) a.nome = a.email;
+    });
+
+    lista.forEach(function (a) {
+        a.link = (linksPorEmail && linksPorEmail[a.email]) || "";
+    });
+
+    return lista;
+}
+
+function AvisaFalhaDownload() {
+    FLUIGC.toast({
+        title: "Não foi possível baixar o documento assinado. Tente novamente.",
+        message: "",
+        type: "warning"
+    });
+}
+
+// Assinantes preenchidos no formulario, usados para complementar o retorno do TAE.
+function LeAssinantesDoFormulario() {
+    try {
+        return (JSON.parse($("#jsonSigner").val()) || []).map(function (s) {
+            return { nome: s.nome, email: s.email, cpf: s.cpf, data: "", status: "Pendente" };
+        });
+    } catch (e) {
+        return [];
+    }
+}
+
+// O mapeamento numerico de StatusDocumento
+function TraduzStatusEnvelope(dadosTAE) {
+    if (dadosTAE.motivoRejeicao) return "Rejeitado";
+
+    var lista = MontaListaAssinantes(dadosTAE);
+    if (lista.length === 0) return "Pendente";
+
+    var assinados = lista.filter(function (a) { return a.status == "Assinado"; }).length;
+
+    if (assinados === lista.length) return "Assinado";
+    if (assinados > 0) return "Assinado parcialmente";
+    return "Pendente";
+}
+
+// O TAE devolve as datas em UTC, mas nem sempre com o sufixo Z.
+function FormataDataTAE(data) {
+    if (!data) return "-";
+
+    var texto = String(data);
+    if (texto.indexOf("Z") === -1 && texto.indexOf("+") === -1) {
+        texto += "Z";
+    }
+
+    var convertida = new Date(texto);
+    if (isNaN(convertida.getTime())) return "-";
+
+    return convertida.toLocaleString("pt-BR");
+}
+
+function FormataCpfCnpj(valor) {
+    var numeros = String(valor || "").replace(/\D/g, "");
+
+    if (numeros.length === 11) {
+        return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    }
+    if (numeros.length === 14) {
+        return numeros.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5");
+    }
+
+    return valor || "";
+}
+
+function AssinaturaEletronica() {
+    const [Assinatura, setAssinatura] = useState(null);
+    const [UrlDocumento, setUrlDocumento] = useState("");
+    const [carregando, setCarregando] = useState(true);
+    const [baixando, setBaixando] = useState(false);
+
     useEffect(() => {
-        BuscaAssinatura($("#numProcess").val()).then((assinatura) => setAssinatura(assinatura));
-        BuscaDocumentoFluig().then((url) => setUrlDocumento(url));
-        BuscaDocumentoAnexo().then((url) => setUrlAnexo(url));
+        BuscaAssinaturaTAE()
+            .then((assinatura) => {
+                setAssinatura(assinatura);
+                $("#hiddenStatusDocumento").val(assinatura.Status);
+            })
+            .catch(() => {})
+            .finally(() => setCarregando(false));
+
+        BuscaUrlDocumentoFluig().then((url) => setUrlDocumento(url));
     }, []);
 
-    function BuscaDocumentoFluig() {
-        return new Promise((resolve, reject) => {
+    function BuscaUrlDocumentoFluig() {
+        return new Promise((resolve) => {
             $.ajax({
-                url: "http://fluig.castilho.com.br:1010" + "/api/public/2.0/documents/getDownloadURL/" + $("#docId").val(), //Prod
-                //url: "http://homologacao.castilho.com.br:2020" + "/api/public/2.0/documents/getDownloadURL/" + id,//Homolog
+                url: "/api/public/2.0/documents/getDownloadURL/" + $("#docId").val(),
                 contentType: "application/json",
                 method: "GET",
-                success: function (retorno) {
-                    resolve(retorno.content);
-                },
-                error: function (e, x) {
-                    FLUIGC.toast({
-                        title: "",
-                        message: "Erro ao buscar documento: " + e,
-                        type: "warning"
-                    });
-                    reject();
-                }
+                success: (retorno) => resolve(retorno.content),
+                error: () => resolve("")
             });
         });
     }
 
-    function BuscaDocumentoAnexo() {
+    function BuscaAssinaturaTAE() {
         return new Promise((resolve, reject) => {
-            $.ajax({
-                url: "http://fluig.castilho.com.br:1010" + "/api/public/ecm/document/" + $("#docId").val() + "/1000", //Prod
-                //url: "http://homologacao.castilho.com.br:2020" + "/api/public/2.0/documents/getDownloadURL/" + id,//Homolog
-                contentType: "application/json",
-                method: "GET",
-                success: function (retorno) {
-                    resolve(retorno.content.attachments[0].downloadURL);
-                },
-                error: function (e, x) {
-                    FLUIGC.toast({
-                        title: "",
-                        message: "Erro ao buscar documento: " + e,
-                        type: "warning"
-                    });
-                    reject();
-                }
-            });
-        });
-    }
+            var envelopeId = $("#taeEnvelopeId").val();
+            if (!envelopeId) {
+                reject("taeEnvelopeId nao encontrado");
+                return;
+            }
 
-    function BuscaAssinatura(numSolic) {
-        return new Promise((resolve, reject) => {
-            DatasetFactory.getDataset("ds_form_aux_wesign", null, [DatasetFactory.createConstraint("numSolic", numSolic, numSolic, ConstraintType.MUST)], null, {
-                success: (ds) => {
-                    console.log(ds)
-                    if (ds.values.length > 0) {
-                        var assinatura = {
-                            NomeArquivo: ds.values[0].nmArquivo,
-                            ChaveArquivo: ds.values[0].chaveArquivo,
-                            jsonAssinantes: JSON.parse(ds.values[0].jsonSigners),
-                            DataEnvio: ds.values[0].dataEnvio,
-                            HorarioEnvio: ds.values[0].horaEnvio,
-                            Status: ds.values[0].statusAssinatura
-                        };
-                        console.log(assinatura);
-                        $("#hiddenStatusDocumento").val(ds.values[0].statusAssinatura);
-                        resolve(assinatura);
-                    } else {
-                        FLUGIC.toast({
-                            title: "Assinatura não Encontrada!",
-                            message: "",
-                            type: "warning"
-                        });
-                        reject();
+            // Busca token para consultar o envelope
+            DatasetFactory.getDataset("dsLoginTokenTAE", null, null, null, {
+                success: (dsToken) => {
+                    var token = SelecionaTokenTAEMaisRecente(dsToken);
+                    if (!token) {
+                        reject("Token TAE invalido");
+                        return;
                     }
+
+                    BuscaLinksAssinantesTAE(envelopeId, token).then((links) => {
+                        DatasetFactory.getDataset("dsTAEEnvelopeInfo", null, [
+                            DatasetFactory.createConstraint("envelopeId", envelopeId, envelopeId, ConstraintType.MUST),
+                            DatasetFactory.createConstraint("token", token, token, ConstraintType.MUST)
+                        ], null, {
+                            success: (ds) => {
+                                var dadosRaw = ds && ds.values && ds.values[0] && ds.values[0].data;
+                                var dadosTAE = {};
+                                try { dadosTAE = JSON.parse(dadosRaw) || {}; } catch (e) {}
+
+                                resolve({
+                                    NomeArquivo: dadosTAE.nomeArquivo || $("#docName").val(),
+                                    jsonAssinantes: MontaListaAssinantes(dadosTAE, links),
+                                    DataEnvio: $("#taeDataEnvio").val(),
+                                    HorarioEnvio: $("#taeHoraEnvio").val(),
+                                    Status: TraduzStatusEnvelope(dadosTAE)
+                                });
+                            },
+                            error: (err) => {
+                                console.error("Erro ao consultar dsTAEEnvelopeInfo:", err);
+                                // Fallback: mostra dados locais mesmo sem status do TAE
+                                resolve({
+                                    NomeArquivo: $("#docName").val(),
+                                    jsonAssinantes: MontaListaAssinantes({}, links),
+                                    DataEnvio: $("#taeDataEnvio").val(),
+                                    HorarioEnvio: $("#taeHoraEnvio").val(),
+                                    Status: "Pendente"
+                                });
+                            }
+                        });
+                    });
+                },
+                error: (err) => reject("Erro ao buscar token TAE: " + err)
+            });
+        });
+    }
+
+    // O link de acesso de cada assinante nao vem na consulta do envelope;
+    function BuscaLinksAssinantesTAE(envelopeId, token) {
+        return new Promise((resolve) => {
+            DatasetFactory.getDataset("dsTAELinksAssinantes", null, [
+                DatasetFactory.createConstraint("envelopeId", envelopeId, envelopeId, ConstraintType.MUST),
+                DatasetFactory.createConstraint("token", token, token, ConstraintType.MUST)
+            ], null, {
+                success: (ds) => {
+                    var porEmail = {};
+                    ((ds && ds.values) || []).forEach(function (linha) {
+                        if (linha.email) porEmail[linha.email] = linha.link;
+                    });
+                    resolve(porEmail);
+                },
+                // Sem os links a tabela continua util, so fica sem essa coluna.
+                error: (err) => {
+                    console.error("Erro ao consultar dsTAELinksAssinantes:", err);
+                    resolve({});
                 }
             });
+        });
+    }
+
+    function handleBaixarAssinado() {
+        var envelopeId = $("#taeEnvelopeId").val();
+        if (!envelopeId || baixando) return;
+
+        setBaixando(true);
+
+        DatasetFactory.getDataset("dsLoginTokenTAE", null, null, null, {
+            success: (dsToken) => {
+                var token = SelecionaTokenTAEMaisRecente(dsToken);
+                if (!token) {
+                    setBaixando(false);
+                    AvisaFalhaDownload();
+                    return;
+                }
+
+                DatasetFactory.getDataset("dsTAEDownloadAssinado", null, [
+                    DatasetFactory.createConstraint("envelopeId", envelopeId, envelopeId, ConstraintType.MUST),
+                    DatasetFactory.createConstraint("token", token, token, ConstraintType.MUST)
+                ], null, {
+                    // Dataset inexistente cai aqui, e nao no error, com values undefined.
+                    success: (ds) => {
+                        setBaixando(false);
+                        var url = (ds && ds.values && ds.values[0] && ds.values[0].url) || "";
+                        if (!url) {
+                            console.error("dsTAEDownloadAssinado nao retornou URL:", ds);
+                            AvisaFalhaDownload();
+                            return;
+                        }
+                        // A URL vem com content-disposition attachment, entao o
+                        // navegador baixa o arquivo sem sair da pagina.
+                        window.location.href = url;
+                    },
+                    error: (err) => {
+                        setBaixando(false);
+                        console.error("Erro ao consultar dsTAEDownloadAssinado:", err);
+                        AvisaFalhaDownload();
+                    }
+                });
+            },
+            error: (err) => {
+                setBaixando(false);
+                console.error("Erro ao buscar token TAE:", err);
+                AvisaFalhaDownload();
+            }
         });
     }
 
     function handleAbreModal() {
+        if (!Assinatura) return;
         ModalAssinantes = FLUIGC.modal(
             {
-                title: NomeArquivo,
+                title: Assinatura.NomeArquivo,
                 content: '<div id="rootAssinantes"></div>',
                 id: "ModalAssinantes",
                 size: "full",
-                actions: [
-                    {
-                        label: "Cancelar",
-                        autoClose: true
-                    }
-                ]
+                actions: [{ label: "Cancelar", autoClose: true }]
             },
-            function (err, data) {
-                if (err) {
-                    // do error handling
-                } else {
-                    ReactDOM.render(React.createElement(ListaAssinantes, { jsonAssinantes: Assinatura.jsonAssinantes }), document.querySelector("#rootAssinantes"));
+            function (err) {
+                if (!err) {
+                    ReactDOM.render(
+                        React.createElement(ListaAssinantes, { jsonAssinantes: Assinatura.jsonAssinantes }),
+                        document.querySelector("#rootAssinantes")
+                    );
                 }
             }
+        );
+    }
+
+    if (carregando) {
+        return (
+            <div className="panel panel-primary">
+                <div className="panel-heading"><h3 className="panel-title">Assinatura</h3></div>
+                <div className="panel-body" style={{ textAlign: "center" }}>Carregando...</div>
+            </div>
+        );
+    }
+
+    if (!Assinatura) {
+        return (
+            <div className="panel panel-primary">
+                <div className="panel-heading"><h3 className="panel-title">Assinatura</h3></div>
+                <div className="panel-body">Não foi possível carregar os dados da assinatura.</div>
+            </div>
         );
     }
 
@@ -579,21 +801,25 @@ function AssinaturaEletronica({ NomeArquivo, ChaveArquivo, jsonAssinantes, DataE
                             </td>
                             <td style={{ textAlign: "center" }}>
                                 <button type="button" className="btn btn-primary" onClick={() => handleAbreModal()}>
-                                    Assinantes {"(" + Assinatura.jsonAssinantes.length + ")"}
+                                    Assinantes ({Assinatura.jsonAssinantes.length})
                                 </button>
                             </td>
                             <td>{Assinatura.DataEnvio}</td>
                             <td>{Assinatura.HorarioEnvio}</td>
-                            <td>{Assinatura.Status}</td>
+                            <td>
+                                <span className={"btn " + (Assinatura.Status == "Assinado" ? "btn-success" : "btn-warning")}>
+                                    {Assinatura.Status}
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
 
                 {Assinatura.Status == "Assinado" && (
                     <div style={{ textAlign: "center" }}>
-                        <a target="_blank" href={UrlAnexo} className="btn btn-success">
-                            Baixar Versão Assinada
-                        </a>
+                        <button type="button" className="btn btn-success" disabled={baixando} onClick={() => handleBaixarAssinado()}>
+                            {baixando ? "Preparando download..." : "Baixar documento assinado"}
+                        </button>
                     </div>
                 )}
             </div>
@@ -602,14 +828,15 @@ function AssinaturaEletronica({ NomeArquivo, ChaveArquivo, jsonAssinantes, DataE
 }
 
 function ListaAssinantes({ jsonAssinantes }) {
-    console.log(jsonAssinantes);
     return (
+        <div style={{ overflowX: "auto" }}>
         <table className="table table-bordered">
             <thead>
                 <tr>
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>CPF</th>
+                    <th>Data da Assinatura</th>
                     <th>Status</th>
                     <th>Link para Assinatura</th>
                 </tr>
@@ -617,22 +844,26 @@ function ListaAssinantes({ jsonAssinantes }) {
             <tbody>
                 {jsonAssinantes.map((Assinante) => {
                     return (
-                        <tr>
+                        <tr key={Assinante.email}>
                             <td>{Assinante.nome}</td>
-                            <td>{hex2a(Assinante.email)}</td>
-                            <td>{hex2a(Assinante.cpf)}</td>
+                            <td>{Assinante.email}</td>
+                            <td>{FormataCpfCnpj(Assinante.cpf)}</td>
+                            <td>{FormataDataTAE(Assinante.data)}</td>
                             <td>
-                                <span className={"btn " + (Assinante.status == "Assinado" ? "btn-success" : "btn-warning")}>{Assinante.status}</span>
+                                <span className={"btn " + (Assinante.status == "Assinado" ? "btn-success" : "btn-warning")}>
+                                    {Assinante.status || "Pendente"}
+                                </span>
                             </td>
                             <td>
-                                <a href={Assinante.signUrl} target="_blank">
-                                    {Assinante.signUrl}
-                                </a>
+                                {Assinante.link
+                                    ? <a href={Assinante.link} target="_blank">{Assinante.link}</a>
+                                    : "-"}
                             </td>
                         </tr>
                     );
                 })}
             </tbody>
         </table>
+        </div>
     );
 }
