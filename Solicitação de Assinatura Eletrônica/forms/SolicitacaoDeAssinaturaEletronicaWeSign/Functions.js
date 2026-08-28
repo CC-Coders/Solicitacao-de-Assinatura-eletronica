@@ -12,7 +12,7 @@ function criaDocNoFluig(file) {
                 DatasetFactory.createConstraint("conteudo", bytes, bytes, ConstraintType.MUST),
                 DatasetFactory.createConstraint("nome", nomeArquivo, nomeArquivo, ConstraintType.SHOULD),
                 DatasetFactory.createConstraint("descricao", nomeArquivo, nomeArquivo, ConstraintType.SHOULD),
-                DatasetFactory.createConstraint("pasta", 655172, 655172, ConstraintType.SHOULD)
+                DatasetFactory.createConstraint("pasta", 34203, 34203, ConstraintType.SHOULD)
             ], null, {
                 success: (res => {
                     if (!res || res == "" || res == null) {
