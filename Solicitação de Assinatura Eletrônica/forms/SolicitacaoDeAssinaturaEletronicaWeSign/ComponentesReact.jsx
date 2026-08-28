@@ -2,6 +2,50 @@ const useEffect = React.useEffect;
 const useState = React.useState;
 const Select = antd.Select;
 
+// Define etapas e a etapa ativa
+function CastilhoWizard({ etapas, etapaAtiva }) {
+    return (
+        <div className="castilhoWizard-progress">
+            {etapas.map((rotulo, indice) => {
+                var classe = "step";
+                if (indice < etapaAtiva) classe += " completed";
+                if (indice === etapaAtiva) classe += " active";
+
+                return (
+                    <div key={indice} className={classe}>
+                        {rotulo}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+function RotulosEstadosDasEtapas() {
+    var etapas  = ["Início", "Aprovação", "Assinatura", "Fim"];
+    var estados = [[0, 4],[5],[23],[7, 11]];
+
+    if ($("#SolicitanteAprovaSolicitacao").val() == "true") {
+        // Remove Etapa Aprovação do Wizard
+        var indiceAprovacao = etapas.indexOf("Aprovação");
+        etapas.splice(indiceAprovacao, 1);
+        estados.splice(indiceAprovacao, 1);
+    }
+
+    return { etapas, estados };
+}
+
+// Mapeia a atividade atual para o indice dentro da lista de estados informada
+function EtapaAtiva(estadosDasEtapas) {
+    var atividade = Number($("#atividade").val() || 0);
+
+    for (var i = 0; i < estadosDasEtapas.length; i++) {
+        if (estadosDasEtapas[i].indexOf(atividade) !== -1) return i;
+    }
+
+    return 0;
+}
+
 function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
     const [listAssinantes, setlistAssinantes] = useState([]);
@@ -142,8 +186,13 @@ function AppRoot() {
         return options;
     }
 
+    var wizard = RotulosEstadosDasEtapas();
+
     return (
         <>
+            {}
+            <CastilhoWizard etapas={wizard.etapas} etapaAtiva={EtapaAtiva(wizard.estados)} />
+
             <div className="panel panel-primary">
                 <div className="panel-heading">
                     <h3 className="panel-title">Assinatura Eletrônica</h3>
