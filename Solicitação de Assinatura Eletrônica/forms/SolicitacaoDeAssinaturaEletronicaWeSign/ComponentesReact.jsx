@@ -2,49 +2,6 @@ const useEffect = React.useEffect;
 const useState = React.useState;
 const Select = antd.Select;
 
-// Define etapas e a etapa ativa
-function CastilhoWizard({ etapas, etapaAtiva }) {
-    return (
-        <div className="castilhoWizard-progress">
-            {etapas.map((rotulo, indice) => {
-                var classe = "step";
-                if (indice < etapaAtiva) classe += " completed";
-                if (indice === etapaAtiva) classe += " active";
-
-                return (
-                    <div key={indice} className={classe}>
-                        {rotulo}
-                    </div>
-                );
-            })}
-        </div>
-    );
-}
-
-function RotulosEstadosDasEtapas() {
-    var etapas  = ["Início", "Aprovação", "Assinatura", "Fim"];
-    var estados = [[0, 4],[5],[23],[7, 11]];
-
-    if ($("#SolicitanteAprovaSolicitacao").val() == "true") {
-        // Remove Etapa Aprovação do Wizard
-        var indiceAprovacao = etapas.indexOf("Aprovação");
-        etapas.splice(indiceAprovacao, 1);
-        estados.splice(indiceAprovacao, 1);
-    }
-
-    return { etapas, estados };
-}
-
-// Mapeia a atividade atual para o indice dentro da lista de estados informada
-function EtapaAtiva(estadosDasEtapas) {
-    var atividade = Number($("#atividade").val() || 0);
-
-    for (var i = 0; i < estadosDasEtapas.length; i++) {
-        if (estadosDasEtapas[i].indexOf(atividade) !== -1) return i;
-    }
-
-    return 0;
-}
 
 function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
@@ -75,7 +32,7 @@ function AppRoot() {
                     if (ds.values[0].STATUS != "SUCCESS") {
                         console.error(ds);
                     }
-                    else{
+                    else {
                         var assinantes = [];
                         var retorno = JSON.parse(ds.values[0].RESULT)
                         for (const assinante of retorno) {
@@ -85,14 +42,14 @@ function AppRoot() {
                                 Cpf: hex2a(assinante.cpf)
                             });
                         }
-                        console.log("Lista de assinantes:", assinantes); 
+                        console.log("Lista de assinantes:", assinantes);
                         resolve(assinantes);
                     }
                 },
                 error: (err) => {
-                console.error("Erro ao carregar assinantes:", err); // Logar erros, se ocorrerem
-                reject(err);
-            }
+                    console.error("Erro ao carregar assinantes:", err); // Logar erros, se ocorrerem
+                    reject(err);
+                }
             });
         });
     }
@@ -186,12 +143,17 @@ function AppRoot() {
         return options;
     }
 
-    var wizard = RotulosEstadosDasEtapas();
+    // var wizard = RotulosEstadosDasEtapas();
 
     return (
         <>
-            {}
-            <CastilhoWizard etapas={wizard.etapas} etapaAtiva={EtapaAtiva(wizard.estados)} />
+            <CastilhoWizard etapas={[
+                    {NOME:"Início", etapas:[0,4], regra:()=>{return true}},
+                    {NOME:"Aprovação", etapas:[5], regra:()=>{return $("#SolicitanteAprovaSolicitacao").val() != "true"}},
+                    {NOME:"Assinatura", etapas:[23], regra:()=>{return true}},
+                    {NOME:"Fim", etapas:[7, 11], regra:()=>{return true}},
+                ]} />
+
 
             <div className="panel panel-primary">
                 <div className="panel-heading">
@@ -211,7 +173,7 @@ function AppRoot() {
             </div>
             <br />
 
-             {$("#atividade").val() == "5" && (
+            {$("#atividade").val() == "5" && (
                 <div className="panel panel-primary">
                     <div className="panel-heading">
                         <h3 className="panel-title">Aprovação</h3>
@@ -237,6 +199,41 @@ function AppRoot() {
             <br />
             {$("#atividade").val() == "23" && <AssinaturaEletronica />}
         </>
+    );
+}
+
+// Define etapas e a etapa ativa
+function CastilhoWizard({ etapas }) {
+
+    // Mapeia a atividade atual para o indice dentro da lista de estados informada
+    function EtapaAtiva() {
+        var atividade = Number($("#atividade").val() || 0);
+
+        for (var i = 0; i < etapas.length; i++) {
+            if (etapas[i].etapas.indexOf(atividade) !== -1) return i;
+        }
+
+        return 0;
+    }
+
+    return (
+        <div className="castilhoWizard-progress">
+            {etapas.map((etapa, indice) => {
+                if (etapa.regra()) {
+                    var classe = "step";
+                    if (indice < EtapaAtiva()) classe += " completed";
+                    if (indice === EtapaAtiva()) classe += " active";
+
+                    return (
+                        <div key={indice} className={classe}>
+                            {etapa.NOME}
+                        </div>
+                    );
+                }else{
+                    return null;
+                }
+            })}
+        </div>
     );
 }
 
@@ -644,7 +641,7 @@ function AssinaturaEletronica() {
                 setAssinatura(assinatura);
                 $("#hiddenStatusDocumento").val(assinatura.Status);
             })
-            .catch(() => {})
+            .catch(() => { })
             .finally(() => setCarregando(false));
 
         BuscaUrlDocumentoFluig().then((url) => setUrlDocumento(url));
@@ -687,7 +684,7 @@ function AssinaturaEletronica() {
                             success: (ds) => {
                                 var dadosRaw = ds && ds.values && ds.values[0] && ds.values[0].data;
                                 var dadosTAE = {};
-                                try { dadosTAE = JSON.parse(dadosRaw) || {}; } catch (e) {}
+                                try { dadosTAE = JSON.parse(dadosRaw) || {}; } catch (e) { }
 
                                 resolve({
                                     NomeArquivo: dadosTAE.nomeArquivo || $("#docName").val(),
@@ -879,40 +876,40 @@ function AssinaturaEletronica() {
 function ListaAssinantes({ jsonAssinantes }) {
     return (
         <div style={{ overflowX: "auto" }}>
-        <table className="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>CPF</th>
-                    <th>Data da Assinatura</th>
-                    <th>Status</th>
-                    <th>Link para Assinatura</th>
-                </tr>
-            </thead>
-            <tbody>
-                {jsonAssinantes.map((Assinante) => {
-                    return (
-                        <tr key={Assinante.email}>
-                            <td>{Assinante.nome}</td>
-                            <td>{Assinante.email}</td>
-                            <td>{FormataCpfCnpj(Assinante.cpf)}</td>
-                            <td>{FormataDataTAE(Assinante.data)}</td>
-                            <td>
-                                <span className={"btn " + (Assinante.status == "Assinado" ? "btn-success" : "btn-warning")}>
-                                    {Assinante.status || "Pendente"}
-                                </span>
-                            </td>
-                            <td>
-                                {Assinante.link
-                                    ? <a href={Assinante.link} target="_blank">{Assinante.link}</a>
-                                    : "-"}
-                            </td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
+            <table className="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>CPF</th>
+                        <th>Data da Assinatura</th>
+                        <th>Status</th>
+                        <th>Link para Assinatura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {jsonAssinantes.map((Assinante) => {
+                        return (
+                            <tr key={Assinante.email}>
+                                <td>{Assinante.nome}</td>
+                                <td>{Assinante.email}</td>
+                                <td>{FormataCpfCnpj(Assinante.cpf)}</td>
+                                <td>{FormataDataTAE(Assinante.data)}</td>
+                                <td>
+                                    <span className={"btn " + (Assinante.status == "Assinado" ? "btn-success" : "btn-warning")}>
+                                        {Assinante.status || "Pendente"}
+                                    </span>
+                                </td>
+                                <td>
+                                    {Assinante.link
+                                        ? <a href={Assinante.link} target="_blank">{Assinante.link}</a>
+                                        : "-"}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
         </div>
     );
 }
