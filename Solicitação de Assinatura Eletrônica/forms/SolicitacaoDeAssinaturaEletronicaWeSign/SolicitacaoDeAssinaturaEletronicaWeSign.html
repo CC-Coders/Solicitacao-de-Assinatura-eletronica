@@ -42,28 +42,60 @@
                     <input type="hidden" name="taeEnvelopeId" id="taeEnvelopeId" />
                     <input type="hidden" name="taeDataEnvio" id="taeDataEnvio" />
                     <input type="hidden" name="taeHoraEnvio" id="taeHoraEnvio" />
+                    <input type="hidden" name="motivo" id="motivo" />
+                </div>
+
+                <!-- HISTÓRICO -->
+                <div style="display: none">
+                    <table id="tableHistorico" tablename="tableHistorico" noaddbutton="true" nodeletebutton="true">
+                        <thead>
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Data</th>
+                                <th>Atividade</th>
+                                <th>Observacao</th>
+                                <th>Acao</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="hidden" class="tableHistoricoUsuario" name="tableHistoricoUsuario" /></td>
+                                <td><input type="hidden" class="tableHistoricoData" name="tableHistoricoData" /></td>
+                                <td><input type="hidden" class="tableHistoricoAtividade" name="tableHistoricoAtividade" /></td>
+                                <td><input type="hidden" class="tableHistoricoObservacao" name="tableHistoricoObservacao" /></td>
+                                <td><input type="hidden" class="tableHistoricoAcao" name="tableHistoricoAcao" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </form>
         </div>
         <script src="Script.js"></script>
         <script>
             var beforeSendValidate = function () {
-                var valida = ValidaAntesDeEnviar();
-
-                if (valida) {
-                    if ($("#atividade").val() == 23) {
-                        if ($("#hiddenStatusDocumento").val() != "Assinado") {
-                            var confirm = window.confirm("O documento ainda não foi assinado, deseja encerrar a solicitação mesmo assim?");
-                            if (confirm) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                }else{
+                if (!ValidaAntesDeEnviar()) {
                     return false;
                 }
+
+                if ($("#atividade").val() == 23 && $("#hiddenStatusDocumento").val() != "Assinado") {
+                    return window.confirm("O documento ainda não foi assinado, deseja encerrar a solicitação mesmo assim?");
+                }
+
+                if ($("#atividade").val() == 5) {
+                    var decisao = $("#hiddenAprovacao").val();
+                    var semObservacao = !($("#motivo").val() || "").trim();
+
+                    if ((decisao == "Retornar" || decisao == "Cancelar") && semObservacao) {
+                        FLUIGC.toast({
+                            title: "Informe o motivo antes de " + decisao.toLowerCase() + " a solicitação.",
+                            message: "",
+                            type: "warning"
+                        });
+                        return false;
+                    }
+                }
+
+                return true;
             };
         </script>
     </body>

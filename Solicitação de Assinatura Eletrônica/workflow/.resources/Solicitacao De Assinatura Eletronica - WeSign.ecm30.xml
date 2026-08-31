@@ -105,8 +105,8 @@
         <version>1</version>
         <sequence>5</sequence>
       </processStatePK>
-      <stateName>Aprovacao</stateName>
-      <stateDescription>Aprovacao</stateDescription>
+      <stateName>Aprovação</stateName>
+      <stateDescription>Aprovação</stateDescription>
       <instruction></instruction>
       <deadlineTime>0</deadlineTime>
       <deadlineFieldName></deadlineFieldName>
@@ -209,8 +209,8 @@
         <version>1</version>
         <sequence>10</sequence>
       </processStatePK>
-      <stateName>Decisão</stateName>
-      <stateDescription>Decisão</stateDescription>
+      <stateName>Acao</stateName>
+      <stateDescription>Acao</stateDescription>
       <joint>false</joint>
       <initialState>false</initialState>
       <transferAttachments>false</transferAttachments>
@@ -234,8 +234,8 @@
         <version>1</version>
         <sequence>15</sequence>
       </processStatePK>
-      <stateName>Decisão</stateName>
-      <stateDescription>Decisão</stateDescription>
+      <stateName>Acao</stateName>
+      <stateDescription>Acao</stateDescription>
       <joint>false</joint>
       <initialState>false</initialState>
       <transferAttachments>false</transferAttachments>
@@ -621,6 +621,7 @@ function beforeTaskSave(colleagueId, nextSequenceId, userList) {&#xd;
             &quot;beforeTaskSave - Envelope TAE publicado com sucesso.&quot;&#xd;
         );&#xd;
     }&#xd;
+    RegistraHistorico(atividade);&#xd;
 }&#xd;
 &#xd;
 // CHAMA SERVIÇO&#xd;
@@ -701,9 +702,6 @@ function ObterTokenTAE() {&#xd;
             &quot;dsLoginTokenTAE vazio&quot;;&#xd;
     }&#xd;
 &#xd;
-    // O dataset jornalizado acumula uma linha por sincronizacao, entao a linha 0&#xd;
-    // costuma ser a mais antiga (token ja vencido). Percorremos todas as linhas&#xd;
-    // e escolhemos a de expiracao mais distante.&#xd;
     var melhorToken = null;&#xd;
     var melhorExpiracao = null;&#xd;
 &#xd;
@@ -758,8 +756,6 @@ function ObterTokenTAE() {&#xd;
     return String(melhorToken);&#xd;
 }&#xd;
 &#xd;
-// O TAE devolve a expiracao em ISO-8601 UTC, com fracao de segundo de tamanho&#xd;
-// variavel. Cortamos em 19 caracteres para ficar no formato fixo do parser.&#xd;
 function ConverteDataExpiracaoTAE(expiracao) {&#xd;
     if (expiracao == null || expiracao == &quot;&quot;) {&#xd;
         return null;&#xd;
@@ -1124,7 +1120,56 @@ function AnexarDocumento(idDocumento) {&#xd;
         idDocumento&#xd;
     );&#xd;
 }&#xd;
-</eventDescription>
+&#xd;
+// HISTORICO&#xd;
+// Grava uma linha na tabela filha a cada conclusao de tarefa&#xd;
+function RegistraHistorico(atividade) {&#xd;
+    // Salvou sem avancar no fluxo: nao e movimentacao, nao registra&#xd;
+    if (getValue(&quot;WKCompletTask&quot;) != &quot;true&quot;) {&#xd;
+        return;&#xd;
+    }&#xd;
+&#xd;
+    if (atividade == &quot;0&quot; || atividade == &quot;4&quot;) {&#xd;
+        InsereHistorico(&quot;Início&quot;, &quot;Enviado&quot;);&#xd;
+    }&#xd;
+    else if (atividade == &quot;5&quot;) {&#xd;
+        InsereHistorico(&quot;Aprovação&quot;, hAPI.getCardValue(&quot;hiddenAprovacao&quot;) || &quot;Avaliado&quot;);&#xd;
+    }&#xd;
+    else if (atividade == &quot;23&quot;) {&#xd;
+        InsereHistorico(&quot;Assinatura&quot;, &quot;Encerrado&quot;);&#xd;
+    }&#xd;
+    else {&#xd;
+        log.info(&quot;RegistraHistorico - Estado &quot; + atividade + &quot; sem historico.&quot;);&#xd;
+    }&#xd;
+}&#xd;
+&#xd;
+// As chaves batem com as classes/names dos inputs da #tableHistorico no formulario&#xd;
+function InsereHistorico(atividade, acao) {&#xd;
+    var observacao = (hAPI.getCardValue(&quot;motivo&quot;) || &quot;&quot;).trim();&#xd;
+&#xd;
+    if (observacao == &quot;&quot;) {&#xd;
+        observacao = &quot;Etapa concluída sem observações adicionais.&quot;;&#xd;
+    }&#xd;
+&#xd;
+    var linha = new java.util.HashMap();&#xd;
+&#xd;
+    linha.put(&quot;tableHistoricoUsuario&quot;, &quot;&quot; + getValue(&quot;WKUser&quot;));&#xd;
+    linha.put(&quot;tableHistoricoData&quot;, &quot;&quot; + DataHoraAtual());&#xd;
+    linha.put(&quot;tableHistoricoAtividade&quot;, &quot;&quot; + atividade);&#xd;
+    linha.put(&quot;tableHistoricoObservacao&quot;, &quot;&quot; + observacao);&#xd;
+    linha.put(&quot;tableHistoricoAcao&quot;, &quot;&quot; + acao);&#xd;
+&#xd;
+    hAPI.addCardChild(&quot;tableHistorico&quot;, linha);&#xd;
+&#xd;
+    // Limpa para a proxima etapa nao herdar o texto da anterior&#xd;
+    hAPI.setCardValue(&quot;motivo&quot;, &quot;&quot;);&#xd;
+&#xd;
+    log.info(&quot;InsereHistorico - &quot; + atividade + &quot; / &quot; + acao);&#xd;
+}&#xd;
+&#xd;
+function DataHoraAtual() {&#xd;
+    return new java.text.SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;).format(new java.util.Date());&#xd;
+}</eventDescription>
     </WorkflowProcessEvent>
   </list>
   <list/>

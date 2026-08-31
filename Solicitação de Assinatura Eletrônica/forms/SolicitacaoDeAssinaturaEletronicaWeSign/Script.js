@@ -6,4 +6,8 @@ $(document).ready(function(){
         ReactDOM.render(React.createElement(AppRoot), document.querySelector('#AppRoot'));
 
     }, 400);
+    var tentativas = 0;
+    var intervalo = setInterval(function () {
+        if (OcultarEnviarNativoFluig() || ++tentativas >= 20) clearInterval(intervalo);
+    }, 200);
 });

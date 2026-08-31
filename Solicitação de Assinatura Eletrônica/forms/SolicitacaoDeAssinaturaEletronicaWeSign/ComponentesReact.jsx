@@ -2,13 +2,10 @@ const useEffect = React.useEffect;
 const useState = React.useState;
 const Select = antd.Select;
 
-
 function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
     const [listAssinantes, setlistAssinantes] = useState([]);
-    const [RadioAprovacao, setRadioAprovacao] = useState("");
     const [PaginaAtual, setPaginaAtual] = useState("Dados Gerais");
-
 
     useEffect(async () => {
         setlistAssinantes(await BuscaListaAssinantes());
@@ -33,8 +30,7 @@ function AppRoot() {
                 success: (ds) => {
                     if (ds.values[0].STATUS != "SUCCESS") {
                         console.error(ds);
-                    }
-                    else {
+                    } else {
                         var assinantes = [];
                         var retorno = JSON.parse(ds.values[0].RESULT)
                         for (const assinante of retorno) {
@@ -54,11 +50,6 @@ function AppRoot() {
                 }
             });
         });
-    }
-
-    function handleChangeInputAprovacao(value) {
-        setRadioAprovacao(value);
-        $("#hiddenAprovacao").val(value);
     }
 
     function handleAdicionarAssinantes(assinante) {
@@ -145,6 +136,19 @@ function AppRoot() {
         return options;
     }
 
+    // Valida e clica no botao nativo do Fluig, que esta escondido
+    function Enviar() {
+        if (ValidaAntesDeEnviar()) {
+            AcionarEnvioFluig();
+        }
+    }
+
+    // Etapa de Aprovacao: a decisao vai no #hiddenAprovacao antes de enviar
+    function Decidir(decisao) {
+        $("#hiddenAprovacao").val(decisao);
+        Enviar();
+    }
+
     return (
         <>
             <CastilhoWizard etapas={[
@@ -174,41 +178,44 @@ function AppRoot() {
                             </div>
                         </div>
                         <br />
-
-                        {$("#atividade").val() == "5" && (
-                            <div className="panel panel-primary">
-                                <div className="panel-heading">
-                                    <h3 className="panel-title">Aprovação</h3>
-                                </div>
-                                <div className="panel-body">
-                                    <div style={{ textAlign: "center" }}>
-                                        <label htmlFor="radioAprovar">
-                                            <input type="radio" name="radioAprovacao" id="radioAprovar" value={"Aprovar"} checked={RadioAprovacao == "Aprovar"} onChange={() => handleChangeInputAprovacao("Aprovar")} />
-                                            Aprovar
-                                        </label>
-                                        <label htmlFor="radioRetornar" style={{ marginLeft: "20px", marginRight: "20px" }}>
-                                            <input type="radio" name="radioAprovacao" id="radioRetornar" value={"Retornar"} checked={RadioAprovacao == "Retornar"} onChange={() => handleChangeInputAprovacao("Retornar")} />
-                                            Retornar
-                                        </label>
-                                        <label htmlFor="radioCancelar">
-                                            <input type="radio" name="radioAprovacao" id="radioCancelar" value={"Cancelar"} checked={RadioAprovacao == "Cancelar"} onChange={() => handleChangeInputAprovacao("Cancelar")} />
-                                            Cancelar
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        <br />
                         {$("#atividade").val() == "23" && <AssinaturaEletronica />}
                     </>
 
                 }
 
                 {PaginaAtual == "Historico" &&
-                //TODO - Componente Historico
-                <>
-                    <h1>Historico</h1>
-                </>
+                    <>
+                        {$("#formMode").val() != "VIEW" && (
+                            <>
+                                <div id="divDecisaoBotoes">
+                                    {$("#atividade").val() == "5" ? (
+                                        <>
+                                            <button type="button" className="btn btn-success" onClick={() => Decidir("Aprovar")}>Aprovar</button>
+                                            <button type="button" className="btn btn-warning" onClick={() => Decidir("Retornar")}>Retornar</button>
+                                            <button type="button" className="btn btn-danger" onClick={() => Decidir("Cancelar")}>Cancelar</button>
+                                        </>
+                                    ) : (
+                                        <button type="button" className="btn btn-success" onClick={() => Enviar()}>Enviar Solicitação</button>
+                                    )}
+                                </div>
+
+                                <div className="historico-obs">
+                                    <label htmlFor="textareaMotivo">Demais Informações:</label>
+                                    <textarea id="textareaMotivo" rows="4" className="form-control" defaultValue={$("#motivo").val()}
+                                        onChange={(e) => $("#motivo").val(e.target.value)}
+                                        placeholder="Digite aqui sua observação, justificativa ou orientação para a próxima etapa."></textarea>
+                                </div>
+                            </>
+                        )}
+
+                        <CastilhoHistorico campos={{
+                            TITULO: "tableHistoricoUsuario",
+                            SUBTITULO: "tableHistoricoAtividade",
+                            DATA: "tableHistoricoData",
+                            TEXTO: "tableHistoricoObservacao",
+                            ACAO: "tableHistoricoAcao",
+                        }} />
+                    </>
                 }
 
 
@@ -220,8 +227,100 @@ function AppRoot() {
     );
 }
 
+function CastilhoHistorico({
+    campos
+}) {
+    const [linhas, setLinhas] = useState([]);
+
+    function LeLinhasHistorico() {
+        var lidas = [];
+
+        $("#tableHistorico tbody tr:not(:first)").each(function() {
+            var linha = {};
+
+            Object.keys(campos).forEach((nome) => {
+                linha[nome] = $(this).find("." + campos[nome]).val();
+            });
+
+            lidas.push(linha);
+        });
+
+        return lidas.reverse();
+    }
+
+    function FormataData(data) {
+        var convertida = new Date(String(data || "").replace(" ", "T"));
+        if (isNaN(convertida.getTime())) return "-";
+
+        return convertida.toLocaleString("pt-BR");
+    }
+
+    function CorDaBorda(texto) {
+        var acao = String(texto || "").toLowerCase();
+
+        if (acao.indexOf("aprov") !== -1 || acao.indexOf("enviad") !== -1) return {
+            border: "solid 1px green"
+        };
+        if (acao.indexOf("reprov") !== -1 || acao.indexOf("retorn") !== -1 || acao.indexOf("cancel") !== -1) return {
+            border: "solid 1px red"
+        };
+
+        return {};
+    }
+
+    useEffect(() => {
+        setLinhas(LeLinhasHistorico());
+    }, []);
+
+    return (
+        <div className="conteudo-historico">
+            <h2 className="historico-titulo">Histórico</h2>
+
+
+
+            <div className="panel panel-default" id="historico">
+                <div className="panel-heading">
+                    <h4 className="panel-title">Histórico</h4>
+                </div>
+                <div className="panel-body">
+                    {linhas.length === 0 && (
+                        <div className="historico-vazio">
+                            <i className="flaticon flaticon-clock icon-md" aria-hidden="true"></i>
+                            Nenhuma movimentação registrada até o momento.
+                        </div>
+                    )}
+
+                    <div id="divLinhasHistorico">
+                        {linhas.map((linha, indice) => (
+                            <div className="card" key={indice}>
+                                <div className="card-body" style={CorDaBorda(linha.ACAO)}>
+                                    <div style={{ display: "flex" }}>
+                                        <div className="divImageUser" style={{ marginRight: "20px" }}>
+                                            <img className="userImage" src={"/api/public/social/image/" + linha.TITULO}
+                                                onError={(e) => e.target.style.display = "none"} />
+                                        </div>
+                                        <div>
+                                            <h3 className="card-title">
+                                                {linha.TITULO} <small>{linha.SUBTITULO}</small>
+                                            </h3>
+                                            <small>{FormataData(linha.DATA)}</small>
+                                            <p className="card-text">{linha.TEXTO || linha.ACAO}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // Define etapas e a etapa ativa
-function CastilhoWizard({ etapas }) {
+function CastilhoWizard({
+    etapas
+}) {
 
     // Mapeia a atividade atual para o indice dentro da lista de estados informada
     function EtapaAtiva() {
@@ -256,7 +355,11 @@ function CastilhoWizard({ etapas }) {
 }
 
 // Define as abas do formulario e a navegacao entre elas
-function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
+function CastilhoFooter({
+    abas,
+    paginaAtual,
+    mudarPagina
+}) {
 
     // Indices das abas que a regra deixa aparecer
     function IndicesVisiveis() {
@@ -352,7 +455,12 @@ function AnexadorDeDocumentos() {
     );
 }
 
-function Assinante({ nome, email, cpf, onExcluirAssinante }) {
+function Assinante({
+    nome,
+    email,
+    cpf,
+    onExcluirAssinante
+}) {
     return (
         <div className="card" style={{ borderColor: "gray" }}>
             <div className="card-body">
@@ -369,7 +477,13 @@ function Assinante({ nome, email, cpf, onExcluirAssinante }) {
     );
 }
 
-function SelecionadorDeAssinantes({ Assinantes, onAdicionarAssinante, onExcluirAssinante, onCadastrarAssinante, listaAssinantes }) {
+function SelecionadorDeAssinantes({
+    Assinantes,
+    onAdicionarAssinante,
+    onExcluirAssinante,
+    onCadastrarAssinante,
+    listaAssinantes
+}) {
     const [AssinanteSelecionado, setAssinanteSelecionado] = useState("");
 
     function renderListaAssinantes() {
@@ -418,7 +532,9 @@ class CadastroNovoAssinante extends React.Component {
     }
 
     componentDidMount() {
-        $("[btn-criar-novo-assinante]").on("click", { onCriaAssinante: this.handleCriaAssinante }, function (e) {
+        $("[btn-criar-novo-assinante]").on("click", {
+            onCriaAssinante: this.handleCriaAssinante
+        }, function(e) {
             e.data.onCriaAssinante();
         });
     }
@@ -481,7 +597,10 @@ class CadastroNovoAssinante extends React.Component {
     }
 }
 
-function CpfInput({ onChange, value }) {
+function CpfInput({
+    onChange,
+    value
+}) {
     const handleCpfChange = (event) => {
         let value = event.target.value.replace(/\D/g, "");
 
@@ -566,7 +685,7 @@ function SelecionaTokenTAEMaisRecente(dsToken) {
     var melhorToken = null;
     var melhorExpiracao = null;
 
-    dsToken.values.forEach(function (linha) {
+    dsToken.values.forEach(function(linha) {
         var token = linha && linha.token;
         if (!token || String(token).indexOf("ERRO") === 0) return;
 
@@ -600,7 +719,7 @@ function FormataExpiracaoTAE(expiracao) {
 function MontaListaAssinantes(dadosTAE, linksPorEmail) {
     var lista = [];
 
-    (dadosTAE.assinantes || []).forEach(function (a) {
+    (dadosTAE.assinantes || []).forEach(function(a) {
         lista.push({
             nome: a.nome,
             email: a.email,
@@ -610,9 +729,11 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
         });
     });
 
-    (dadosTAE.pendentes || []).forEach(function (p) {
+    (dadosTAE.pendentes || []).forEach(function(p) {
         // Evita duplicar quem ja esta na lista de assinantes
-        if (lista.some(function (a) { return a.email == p.email; })) return;
+        if (lista.some(function(a) {
+                return a.email == p.email;
+            })) return;
         lista.push({
             nome: p.nome || "",
             email: p.email,
@@ -628,8 +749,10 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
         return doFormulario;
     }
 
-    lista.forEach(function (a) {
-        var informado = doFormulario.find(function (s) { return s.email == a.email; });
+    lista.forEach(function(a) {
+        var informado = doFormulario.find(function(s) {
+            return s.email == a.email;
+        });
         if (!informado) return;
 
         if (!a.nome) a.nome = informado.nome;
@@ -637,11 +760,11 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
     });
 
     // Garante nome visivel mesmo quando nao ha correspondencia no formulario
-    lista.forEach(function (a) {
+    lista.forEach(function(a) {
         if (!a.nome) a.nome = a.email;
     });
 
-    lista.forEach(function (a) {
+    lista.forEach(function(a) {
         a.link = (linksPorEmail && linksPorEmail[a.email]) || "";
     });
 
@@ -659,8 +782,14 @@ function AvisaFalhaDownload() {
 // Assinantes preenchidos no formulario, usados para complementar o retorno do TAE.
 function LeAssinantesDoFormulario() {
     try {
-        return (JSON.parse($("#jsonSigner").val()) || []).map(function (s) {
-            return { nome: s.nome, email: s.email, cpf: s.cpf, data: "", status: "Pendente" };
+        return (JSON.parse($("#jsonSigner").val()) || []).map(function(s) {
+            return {
+                nome: s.nome,
+                email: s.email,
+                cpf: s.cpf,
+                data: "",
+                status: "Pendente"
+            };
         });
     } catch (e) {
         return [];
@@ -674,7 +803,9 @@ function TraduzStatusEnvelope(dadosTAE) {
     var lista = MontaListaAssinantes(dadosTAE);
     if (lista.length === 0) return "Pendente";
 
-    var assinados = lista.filter(function (a) { return a.status == "Assinado"; }).length;
+    var assinados = lista.filter(function(a) {
+        return a.status == "Assinado";
+    }).length;
 
     if (assinados === lista.length) return "Assinado";
     if (assinados > 0) return "Assinado parcialmente";
@@ -721,7 +852,7 @@ function AssinaturaEletronica() {
                 setAssinatura(assinatura);
                 $("#hiddenStatusDocumento").val(assinatura.Status);
             })
-            .catch(() => { })
+            .catch(() => {})
             .finally(() => setCarregando(false));
 
         BuscaUrlDocumentoFluig().then((url) => setUrlDocumento(url));
@@ -764,7 +895,9 @@ function AssinaturaEletronica() {
                             success: (ds) => {
                                 var dadosRaw = ds && ds.values && ds.values[0] && ds.values[0].data;
                                 var dadosTAE = {};
-                                try { dadosTAE = JSON.parse(dadosRaw) || {}; } catch (e) { }
+                                try {
+                                    dadosTAE = JSON.parse(dadosRaw) || {};
+                                } catch (e) {}
 
                                 resolve({
                                     NomeArquivo: dadosTAE.nomeArquivo || $("#docName").val(),
@@ -802,7 +935,7 @@ function AssinaturaEletronica() {
             ], null, {
                 success: (ds) => {
                     var porEmail = {};
-                    ((ds && ds.values) || []).forEach(function (linha) {
+                    ((ds && ds.values) || []).forEach(function(linha) {
                         if (linha.email) porEmail[linha.email] = linha.link;
                     });
                     resolve(porEmail);
@@ -865,18 +998,22 @@ function AssinaturaEletronica() {
 
     function handleAbreModal() {
         if (!Assinatura) return;
-        ModalAssinantes = FLUIGC.modal(
-            {
+        ModalAssinantes = FLUIGC.modal({
                 title: Assinatura.NomeArquivo,
                 content: '<div id="rootAssinantes"></div>',
                 id: "ModalAssinantes",
                 size: "full",
-                actions: [{ label: "Cancelar", autoClose: true }]
+                actions: [{
+                    label: "Cancelar",
+                    autoClose: true
+                }]
             },
-            function (err) {
+            function(err) {
                 if (!err) {
                     ReactDOM.render(
-                        React.createElement(ListaAssinantes, { jsonAssinantes: Assinatura.jsonAssinantes }),
+                        React.createElement(ListaAssinantes, {
+                            jsonAssinantes: Assinatura.jsonAssinantes
+                        }),
                         document.querySelector("#rootAssinantes")
                     );
                 }
@@ -953,7 +1090,9 @@ function AssinaturaEletronica() {
     );
 }
 
-function ListaAssinantes({ jsonAssinantes }) {
+function ListaAssinantes({
+    jsonAssinantes
+}) {
     return (
         <div style={{ overflowX: "auto" }}>
             <table className="table table-bordered">

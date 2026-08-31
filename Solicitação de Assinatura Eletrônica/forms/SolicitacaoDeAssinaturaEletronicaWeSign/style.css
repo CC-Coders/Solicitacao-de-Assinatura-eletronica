@@ -244,3 +244,180 @@
             display: none;
         }
     }
+
+    /* HISTÓRICO */
+    .conteudo-historico {
+        margin: 0 auto;
+    }
+
+    .historico-titulo {
+        font-size: 20px;
+        font-weight: 600;
+        color: #58595b;
+        margin: 0 0 20px;
+    }
+
+    /* Botao de enviar a solicitacao */
+    #divDecisaoBotoes {
+        display: flex;
+        justify-content: center;
+        gap: 14px;
+        margin-bottom: 22px;
+        flex-wrap: wrap;
+    }
+
+    #divDecisaoBotoes .btn {
+        min-width: 300px;
+        padding: 8px 24px !important;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    @media (max-width: 720px) {
+        #divDecisaoBotoes .btn {
+            min-width: 100%;
+        }
+    }
+
+    /* Campo de observacao da movimentacao */
+    .historico-obs {
+        margin-bottom: 24px;
+    }
+
+    .historico-obs label {
+        display: block;
+        margin-bottom: 7px;
+        font-weight: 600;
+        color: #58595b;
+    }
+
+    #textareaMotivo {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 100px;
+        resize: vertical;
+        border: 1px solid #ccc !important;
+        border-radius: 4px !important;
+        background-color: #F7F8FA !important;
+        padding: 6px 12px !important;
+        font-size: 14px;
+        color: #58595b;
+    }
+
+    #textareaMotivo:focus {
+        border-color: #66afe9 !important;
+        outline: 0;
+        box-shadow: none !important;
+    }
+
+    #historico.panel {
+        border: 1px solid #ddd !important;
+        border-radius: 4px !important;
+        overflow: hidden;
+        box-shadow: none !important;
+        margin: 0 !important;
+    }
+
+    #historico > .panel-heading {
+        background-color: #eaeaea !important;
+        border-bottom: 1px solid #ddd !important;
+        padding: 10px 15px !important;
+    }
+
+    #historico > .panel-heading .panel-title {
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        color: #58595b !important;
+        margin: 0 !important;
+    }
+
+    #historico > .panel-body {
+        padding: 15px !important;
+        background: #fff !important;
+    }
+
+    /* Mensagem quando nao ha movimentacao */
+    .historico-vazio {
+        font-size: 13px;
+        color: #999;
+        text-align: center;
+        padding: 24px 4px;
+        border: 1px dashed #ddd;
+        border-radius: 4px;
+        background: #F7F8FA;
+    }
+
+    .historico-vazio .flaticon {
+        display: block;
+        font-size: 32px;
+        color: #bbb;
+        margin-bottom: 8px;
+    }
+
+    /* Lista de movimentacoes */
+    #divLinhasHistorico {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    #divLinhasHistorico .card {
+        margin: 0;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+    }
+
+    #divLinhasHistorico .card-body {
+        padding: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    #divLinhasHistorico .divImageUser {
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
+        background: #ececec;
+        border-radius: 50%;
+        overflow: hidden;
+    }
+
+    #divLinhasHistorico .userImage {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    #divLinhasHistorico .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #000;
+        margin: 0 0 2px;
+        line-height: 1.35;
+    }
+
+    #divLinhasHistorico .card-title small {
+        color: #777;
+        font-weight: 400;
+        margin-left: 4px;
+    }
+
+    #divLinhasHistorico .card-body small {
+        font-size: 12px;
+        color: #777;
+    }
+
+    #divLinhasHistorico .card-text {
+        margin: 6px 0 0;
+        color: #333;
+        font-size: 14px;
+        line-height: 1.55;
+        word-break: break-word;
+    }
