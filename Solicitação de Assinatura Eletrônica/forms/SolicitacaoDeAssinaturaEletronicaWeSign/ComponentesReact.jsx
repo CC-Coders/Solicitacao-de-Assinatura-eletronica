@@ -6,7 +6,6 @@ const Select = antd.Select;
 function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
     const [listAssinantes, setlistAssinantes] = useState([]);
-    const [RadioAprovacao, setRadioAprovacao] = useState("");
     const [PaginaAtual, setPaginaAtual] = useState("Dados Gerais");
 
 
@@ -54,11 +53,6 @@ function AppRoot() {
                 }
             });
         });
-    }
-
-    function handleChangeInputAprovacao(value) {
-        setRadioAprovacao(value);
-        $("#hiddenAprovacao").val(value);
     }
 
     function handleAdicionarAssinantes(assinante) {
@@ -145,13 +139,26 @@ function AppRoot() {
         return options;
     }
 
+    // Valida e clica no botao nativo do Fluig, que esta escondido
+    function Enviar() {
+        if (ValidaAntesDeEnviar()) {
+            AcionarEnvioFluig();
+        }
+    }
+
+    // Etapa de Aprovacao: a decisao vai no #hiddenAprovacao antes de enviar
+    function Decidir(decisao) {
+        $("#hiddenAprovacao").val(decisao);
+        Enviar();
+    }
+
     return (
         <>
             <CastilhoWizard etapas={[
-                { NOME: "Início", etapas: [0, 4], regra: () => { return true } },
+                { NOME: "Início", etapas: [0, 4] },
                 { NOME: "Aprovação", etapas: [5], regra: () => { return $("#SolicitanteAprovaSolicitacao").val() != "true" } },
-                { NOME: "Assinatura", etapas: [23], regra: () => { return true } },
-                { NOME: "Fim", etapas: [7, 11], regra: () => { return true } },
+                { NOME: "Assinatura", etapas: [23] },
+                { NOME: "Fim", etapas: [7, 11] },
             ]} />
 
 
@@ -174,49 +181,153 @@ function AppRoot() {
                             </div>
                         </div>
                         <br />
-
-                        {$("#atividade").val() == "5" && (
-                            <div className="panel panel-primary">
-                                <div className="panel-heading">
-                                    <h3 className="panel-title">Aprovação</h3>
-                                </div>
-                                <div className="panel-body">
-                                    <div style={{ textAlign: "center" }}>
-                                        <label htmlFor="radioAprovar">
-                                            <input type="radio" name="radioAprovacao" id="radioAprovar" value={"Aprovar"} checked={RadioAprovacao == "Aprovar"} onChange={() => handleChangeInputAprovacao("Aprovar")} />
-                                            Aprovar
-                                        </label>
-                                        <label htmlFor="radioRetornar" style={{ marginLeft: "20px", marginRight: "20px" }}>
-                                            <input type="radio" name="radioAprovacao" id="radioRetornar" value={"Retornar"} checked={RadioAprovacao == "Retornar"} onChange={() => handleChangeInputAprovacao("Retornar")} />
-                                            Retornar
-                                        </label>
-                                        <label htmlFor="radioCancelar">
-                                            <input type="radio" name="radioAprovacao" id="radioCancelar" value={"Cancelar"} checked={RadioAprovacao == "Cancelar"} onChange={() => handleChangeInputAprovacao("Cancelar")} />
-                                            Cancelar
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                        <br />
                         {$("#atividade").val() == "23" && <AssinaturaEletronica />}
                     </>
 
                 }
 
                 {PaginaAtual == "Historico" &&
-                //TODO - Componente Historico
-                <>
-                    <h1>Historico</h1>
-                </>
+                    <CastilhoHistorico tabela="tableHistorico" campos={[
+                        { NOME: "TITULO", CLASSE: "tableHistoricoUsuario" },
+                        { NOME: "SUBTITULO", CLASSE: "tableHistoricoAtividade" },
+                        { NOME: "DATA", CLASSE: "tableHistoricoData" },
+                        { NOME: "TEXTO", CLASSE: "tableHistoricoObservacao" },
+                        { NOME: "ACAO", CLASSE: "tableHistoricoAcao" },
+                    ]} botoes={[
+                        { NOME: "Enviar Solicitação", COR: "btn-success",
+                          regra: () => { return $("#atividade").val() != "5" }, acao: () => { Enviar() } },
+
+                        { NOME: "Aprovar", COR: "btn-success",
+                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Aprovar") } },
+
+                        { NOME: "Retornar", COR: "btn-warning",
+                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Retornar") } },
+
+                        { NOME: "Cancelar", COR: "btn-danger",
+                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Cancelar") } },
+                    ]} />
                 }
 
 
             <CastilhoFooter abas={[
-                { NOME: "Dados Gerais", SUBTITULO: "Documento . Assinantes", regra: () => { return true } },
-                { NOME: "Historico", SUBTITULO: "Movimentações do processo", regra: () => { return true } },
+                { NOME: "Dados Gerais", SUBTITULO: "Documento . Assinantes" },
+                { NOME: "Historico", SUBTITULO: "Movimentações do processo" },
             ]} paginaAtual={PaginaAtual} mudarPagina={(pagina)=>{setPaginaAtual(pagina)}} />
         </>
+    );
+}
+// Define de qual tabela filha sai cada parte do card e quais botoes aparecem
+function CastilhoHistorico({ tabela, campos, botoes }) {
+    const [linhas, setLinhas] = useState([]);
+
+    function LeLinhasHistorico() {
+        var lidas = [];
+
+        $("#" + tabela + " tbody tr").each(function () {
+            var linha = {};
+
+            campos.forEach((campo) => {
+                linha[campo.NOME] = $(this).find("." + campo.CLASSE).val();
+            });
+
+            if (!linha.TITULO) return;   // pula a linha-modelo, que vem sempre vazia
+
+            lidas.push(linha);
+        });
+
+        return lidas.reverse();
+    }
+
+    function FormataData(data) {
+        var convertida = new Date(String(data || "").replace(" ", "T"));
+        if (isNaN(convertida.getTime())) return "-";
+
+        return convertida.toLocaleString("pt-BR");
+    }
+
+    function CorDaBorda(texto) {
+        var acao = String(texto || "").toLowerCase();
+
+        if (acao.indexOf("aprov") !== -1 || acao.indexOf("enviad") !== -1) return { border: "solid 1px green" };
+        if (acao.indexOf("reprov") !== -1 || acao.indexOf("retorn") !== -1 || acao.indexOf("cancel") !== -1) return { border: "solid 1px red" };
+
+        return {};
+    }
+
+    useEffect(() => {
+        // O Fluig monta as linhas da tabela filha depois do render, entao relemos
+        var recarrega = () => setLinhas(LeLinhasHistorico());
+
+        recarrega();
+        setTimeout(recarrega, 600);
+        setTimeout(recarrega, 1500);
+    }, []);
+
+    return (
+        <div className="conteudo-historico">
+            <h2 className="historico-titulo">Histórico</h2>
+
+            {$("#formMode").val() != "VIEW" && (
+                <div id="divDecisaoBotoes">
+                    {botoes.map((botao, indice) => {
+                        if (!botao.regra || botao.regra()) {
+                            return (
+                                <button type="button" key={indice} className={"btn " + botao.COR} onClick={botao.acao}>
+                                    {botao.NOME}
+                                </button>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })}
+                </div>
+            )}
+
+            {}
+            <div className="historico-obs">
+                <label htmlFor="textareaMotivo">Demais Informações:</label>
+                <textarea id="textareaMotivo" rows="4" className="form-control"
+                    defaultValue={$("#motivo").val()}
+                    onChange={(e) => $("#motivo").val(e.target.value)}
+                    placeholder="Digite aqui sua observação, justificativa ou orientação para a próxima etapa."></textarea>
+            </div>
+
+            <div className="panel panel-default" id="historico">
+                <div className="panel-heading">
+                    <h4 className="panel-title">Histórico</h4>
+                </div>
+                <div className="panel-body">
+                    {linhas.length === 0 && (
+                        <div className="historico-vazio">
+                            <i className="flaticon flaticon-clock icon-md" aria-hidden="true"></i>
+                            Nenhuma movimentação registrada até o momento.
+                        </div>
+                    )}
+
+                    <div id="divLinhasHistorico">
+                        {linhas.map((linha, indice) => (
+                            <div className="card" key={indice}>
+                                <div className="card-body" style={CorDaBorda(linha.ACAO)}>
+                                    <div style={{ display: "flex" }}>
+                                        <div className="divImageUser" style={{ marginRight: "20px" }}>
+                                            <img className="userImage" src={"/api/public/social/image/" + linha.TITULO}
+                                                onError={(e) => e.target.style.display = "none"} />
+                                        </div>
+                                        <div>
+                                            <h3 className="card-title">
+                                                {linha.TITULO} <small>{linha.SUBTITULO}</small>
+                                            </h3>
+                                            <small>{FormataData(linha.DATA)}</small>
+                                            <p className="card-text">{linha.TEXTO || linha.ACAO}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
@@ -237,7 +348,7 @@ function CastilhoWizard({ etapas }) {
     return (
         <div className="castilhoWizard-progress">
             {etapas.map((etapa, indice) => {
-                if (etapa.regra()) {
+                if (!etapa.regra || etapa.regra()) {
                     var classe = "step";
                     if (indice < EtapaAtiva()) classe += " completed";
                     if (indice === EtapaAtiva()) classe += " active";
@@ -263,7 +374,7 @@ function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
         var visiveis = [];
 
         abas.forEach((aba, indice) => {
-            if (aba.regra()) visiveis.push(indice);
+            if (!aba.regra || aba.regra()) visiveis.push(indice);
         });
 
         return visiveis;
@@ -281,7 +392,7 @@ function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
                 </button>
 
                 {abas.map((aba, indice) => {
-                    if (aba.regra()) {
+                    if (!aba.regra || aba.regra()) {
                         // Posicao entre as visiveis, para numerar o cartao sem contar as escondidas
                         var posicao = visiveis.indexOf(indice);
 

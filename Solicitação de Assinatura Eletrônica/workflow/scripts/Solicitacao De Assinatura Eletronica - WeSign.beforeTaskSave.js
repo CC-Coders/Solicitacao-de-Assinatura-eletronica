@@ -58,6 +58,7 @@ function beforeTaskSave(colleagueId, nextSequenceId, userList) {
             "beforeTaskSave - Envelope TAE publicado com sucesso."
         );
     }
+    RegistraHistorico(atividade);
 }
 
 // CHAMA SERVIÇO
@@ -555,4 +556,53 @@ function AnexarDocumento(idDocumento) {
     hAPI.attachDocument(
         idDocumento
     );
+}
+
+// HISTORICO
+function RegistraHistorico(atividade) {
+    // Salvou sem avancar no fluxo: nao e movimentacao, nao registra
+    if (getValue("WKCompletTask") != "true") {
+        return;
+    }
+
+    if (atividade == "0" || atividade == "4") {
+        InsereHistorico("Início", "Enviado");
+    }
+    else if (atividade == "5") {
+        InsereHistorico("Aprovação", hAPI.getCardValue("hiddenAprovacao") || "Avaliado");
+    }
+    else if (atividade == "23") {
+        InsereHistorico("Assinatura", "Encerrado");
+    }
+    else {
+        log.info("RegistraHistorico - Estado " + atividade + " sem historico.");
+    }
+}
+
+// As chaves batem com as classes/names dos inputs da #tableHistorico no formulario
+function InsereHistorico(atividade, acao) {
+    var observacao = (hAPI.getCardValue("motivo") || "").trim();
+
+    if (observacao == "") {
+        observacao = "Etapa concluída sem observações adicionais.";
+    }
+
+    var linha = new java.util.HashMap();
+
+    linha.put("tableHistoricoUsuario", "" + getValue("WKUser"));
+    linha.put("tableHistoricoData", "" + DataHoraAtual());
+    linha.put("tableHistoricoAtividade", "" + atividade);
+    linha.put("tableHistoricoObservacao", "" + observacao);
+    linha.put("tableHistoricoAcao", "" + acao);
+
+    hAPI.addCardChild("tableHistorico", linha);
+
+    // Limpa para a proxima etapa nao herdar o texto da anterior
+    hAPI.setCardValue("motivo", "");
+
+    log.info("InsereHistorico - " + atividade + " / " + acao);
+}
+
+function DataHoraAtual() {
+    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
 }
