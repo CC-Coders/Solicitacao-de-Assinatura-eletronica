@@ -73,22 +73,29 @@
         <script src="Script.js"></script>
         <script>
             var beforeSendValidate = function () {
-                var valida = ValidaAntesDeEnviar();
-
-                if (valida) {
-                    if ($("#atividade").val() == 23) {
-                        if ($("#hiddenStatusDocumento").val() != "Assinado") {
-                            var confirm = window.confirm("O documento ainda não foi assinado, deseja encerrar a solicitação mesmo assim?");
-                            if (confirm) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        }
-                    }
-                }else{
+                if (!ValidaAntesDeEnviar()) {
                     return false;
                 }
+
+                if ($("#atividade").val() == 23 && $("#hiddenStatusDocumento").val() != "Assinado") {
+                    return window.confirm("O documento ainda não foi assinado, deseja encerrar a solicitação mesmo assim?");
+                }
+
+                if ($("#atividade").val() == 5) {
+                    var decisao = $("#hiddenAprovacao").val();
+                    var semObservacao = !($("#motivo").val() || "").trim();
+
+                    if ((decisao == "Retornar" || decisao == "Cancelar") && semObservacao) {
+                        FLUIGC.toast({
+                            title: "Informe o motivo antes de " + decisao.toLowerCase() + " a solicitação.",
+                            message: "",
+                            type: "warning"
+                        });
+                        return false;
+                    }
+                }
+
+                return true;
             };
         </script>
     </body>
