@@ -155,10 +155,10 @@ function AppRoot() {
     return (
         <>
             <CastilhoWizard etapas={[
-                { NOME: "Início", etapas: [0, 4] },
+                { NOME: "Início", etapas: [0, 4], regra: () => { return true } },
                 { NOME: "Aprovação", etapas: [5], regra: () => { return $("#SolicitanteAprovaSolicitacao").val() != "true" } },
-                { NOME: "Assinatura", etapas: [23] },
-                { NOME: "Fim", etapas: [7, 11] },
+                { NOME: "Assinatura", etapas: [23], regra: () => { return true } },
+                { NOME: "Fim", etapas: [7, 11], regra: () => { return true } },
             ]} />
 
 
@@ -210,8 +210,8 @@ function AppRoot() {
 
 
             <CastilhoFooter abas={[
-                { NOME: "Dados Gerais", SUBTITULO: "Documento . Assinantes" },
-                { NOME: "Historico", SUBTITULO: "Movimentações do processo" },
+                { NOME: "Dados Gerais", SUBTITULO: "Documento . Assinantes", regra: () => { return true } },
+                { NOME: "Historico", SUBTITULO: "Movimentações do processo", regra: () => { return true } },
             ]} paginaAtual={PaginaAtual} mudarPagina={(pagina)=>{setPaginaAtual(pagina)}} />
         </>
     );
@@ -348,7 +348,7 @@ function CastilhoWizard({ etapas }) {
     return (
         <div className="castilhoWizard-progress">
             {etapas.map((etapa, indice) => {
-                if (!etapa.regra || etapa.regra()) {
+                if (etapa.regra()) {
                     var classe = "step";
                     if (indice < EtapaAtiva()) classe += " completed";
                     if (indice === EtapaAtiva()) classe += " active";
@@ -374,7 +374,7 @@ function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
         var visiveis = [];
 
         abas.forEach((aba, indice) => {
-            if (!aba.regra || aba.regra()) visiveis.push(indice);
+            if (aba.regra()) visiveis.push(indice);
         });
 
         return visiveis;
@@ -392,7 +392,7 @@ function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
                 </button>
 
                 {abas.map((aba, indice) => {
-                    if (!aba.regra || aba.regra()) {
+                    if (aba.regra()) {
                         // Posicao entre as visiveis, para numerar o cartao sem contar as escondidas
                         var posicao = visiveis.indexOf(indice);
 
