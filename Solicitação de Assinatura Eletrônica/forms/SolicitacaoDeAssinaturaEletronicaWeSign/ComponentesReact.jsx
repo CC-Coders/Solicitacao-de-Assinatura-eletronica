@@ -2,12 +2,10 @@ const useEffect = React.useEffect;
 const useState = React.useState;
 const Select = antd.Select;
 
-
 function AppRoot() {
     const [Assinantes, setAssinantes] = useState([]);
     const [listAssinantes, setlistAssinantes] = useState([]);
     const [PaginaAtual, setPaginaAtual] = useState("Dados Gerais");
-
 
     useEffect(async () => {
         setlistAssinantes(await BuscaListaAssinantes());
@@ -32,8 +30,7 @@ function AppRoot() {
                 success: (ds) => {
                     if (ds.values[0].STATUS != "SUCCESS") {
                         console.error(ds);
-                    }
-                    else {
+                    } else {
                         var assinantes = [];
                         var retorno = JSON.parse(ds.values[0].RESULT)
                         for (const assinante of retorno) {
@@ -187,25 +184,38 @@ function AppRoot() {
                 }
 
                 {PaginaAtual == "Historico" &&
-                    <CastilhoHistorico tabela="tableHistorico" campos={[
-                        { NOME: "TITULO", CLASSE: "tableHistoricoUsuario" },
-                        { NOME: "SUBTITULO", CLASSE: "tableHistoricoAtividade" },
-                        { NOME: "DATA", CLASSE: "tableHistoricoData" },
-                        { NOME: "TEXTO", CLASSE: "tableHistoricoObservacao" },
-                        { NOME: "ACAO", CLASSE: "tableHistoricoAcao" },
-                    ]} botoes={[
-                        { NOME: "Enviar Solicitação", COR: "btn-success",
-                          regra: () => { return $("#atividade").val() != "5" }, acao: () => { Enviar() } },
+                    <>
+                        {$("#formMode").val() != "VIEW" && (
+                            <>
+                                <div id="divDecisaoBotoes">
+                                    {$("#atividade").val() == "5" ? (
+                                        <>
+                                            <button type="button" className="btn btn-success" onClick={() => Decidir("Aprovar")}>Aprovar</button>
+                                            <button type="button" className="btn btn-warning" onClick={() => Decidir("Retornar")}>Retornar</button>
+                                            <button type="button" className="btn btn-danger" onClick={() => Decidir("Cancelar")}>Cancelar</button>
+                                        </>
+                                    ) : (
+                                        <button type="button" className="btn btn-success" onClick={() => Enviar()}>Enviar Solicitação</button>
+                                    )}
+                                </div>
 
-                        { NOME: "Aprovar", COR: "btn-success",
-                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Aprovar") } },
+                                <div className="historico-obs">
+                                    <label htmlFor="textareaMotivo">Demais Informações:</label>
+                                    <textarea id="textareaMotivo" rows="4" className="form-control" defaultValue={$("#motivo").val()}
+                                        onChange={(e) => $("#motivo").val(e.target.value)}
+                                        placeholder="Digite aqui sua observação, justificativa ou orientação para a próxima etapa."></textarea>
+                                </div>
+                            </>
+                        )}
 
-                        { NOME: "Retornar", COR: "btn-warning",
-                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Retornar") } },
-
-                        { NOME: "Cancelar", COR: "btn-danger",
-                          regra: () => { return $("#atividade").val() == "5" }, acao: () => { Decidir("Cancelar") } },
-                    ]} />
+                        <CastilhoHistorico campos={{
+                            TITULO: "tableHistoricoUsuario",
+                            SUBTITULO: "tableHistoricoAtividade",
+                            DATA: "tableHistoricoData",
+                            TEXTO: "tableHistoricoObservacao",
+                            ACAO: "tableHistoricoAcao",
+                        }} />
+                    </>
                 }
 
 
@@ -216,21 +226,21 @@ function AppRoot() {
         </>
     );
 }
-// Define de qual tabela filha sai cada parte do card e quais botoes aparecem
-function CastilhoHistorico({ tabela, campos, botoes }) {
+
+function CastilhoHistorico({
+    campos
+}) {
     const [linhas, setLinhas] = useState([]);
 
     function LeLinhasHistorico() {
         var lidas = [];
 
-        $("#" + tabela + " tbody tr").each(function () {
+        $("#tableHistorico tbody tr:not(:first)").each(function() {
             var linha = {};
 
-            campos.forEach((campo) => {
-                linha[campo.NOME] = $(this).find("." + campo.CLASSE).val();
+            Object.keys(campos).forEach((nome) => {
+                linha[nome] = $(this).find("." + campos[nome]).val();
             });
-
-            if (!linha.TITULO) return;   // pula a linha-modelo, que vem sempre vazia
 
             lidas.push(linha);
         });
@@ -248,49 +258,25 @@ function CastilhoHistorico({ tabela, campos, botoes }) {
     function CorDaBorda(texto) {
         var acao = String(texto || "").toLowerCase();
 
-        if (acao.indexOf("aprov") !== -1 || acao.indexOf("enviad") !== -1) return { border: "solid 1px green" };
-        if (acao.indexOf("reprov") !== -1 || acao.indexOf("retorn") !== -1 || acao.indexOf("cancel") !== -1) return { border: "solid 1px red" };
+        if (acao.indexOf("aprov") !== -1 || acao.indexOf("enviad") !== -1) return {
+            border: "solid 1px green"
+        };
+        if (acao.indexOf("reprov") !== -1 || acao.indexOf("retorn") !== -1 || acao.indexOf("cancel") !== -1) return {
+            border: "solid 1px red"
+        };
 
         return {};
     }
 
     useEffect(() => {
-        // O Fluig monta as linhas da tabela filha depois do render, entao relemos
-        var recarrega = () => setLinhas(LeLinhasHistorico());
-
-        recarrega();
-        setTimeout(recarrega, 600);
-        setTimeout(recarrega, 1500);
+        setLinhas(LeLinhasHistorico());
     }, []);
 
     return (
         <div className="conteudo-historico">
             <h2 className="historico-titulo">Histórico</h2>
 
-            {$("#formMode").val() != "VIEW" && (
-                <div id="divDecisaoBotoes">
-                    {botoes.map((botao, indice) => {
-                        if (!botao.regra || botao.regra()) {
-                            return (
-                                <button type="button" key={indice} className={"btn " + botao.COR} onClick={botao.acao}>
-                                    {botao.NOME}
-                                </button>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
-                </div>
-            )}
 
-            {}
-            <div className="historico-obs">
-                <label htmlFor="textareaMotivo">Demais Informações:</label>
-                <textarea id="textareaMotivo" rows="4" className="form-control"
-                    defaultValue={$("#motivo").val()}
-                    onChange={(e) => $("#motivo").val(e.target.value)}
-                    placeholder="Digite aqui sua observação, justificativa ou orientação para a próxima etapa."></textarea>
-            </div>
 
             <div className="panel panel-default" id="historico">
                 <div className="panel-heading">
@@ -332,7 +318,9 @@ function CastilhoHistorico({ tabela, campos, botoes }) {
 }
 
 // Define etapas e a etapa ativa
-function CastilhoWizard({ etapas }) {
+function CastilhoWizard({
+    etapas
+}) {
 
     // Mapeia a atividade atual para o indice dentro da lista de estados informada
     function EtapaAtiva() {
@@ -367,7 +355,11 @@ function CastilhoWizard({ etapas }) {
 }
 
 // Define as abas do formulario e a navegacao entre elas
-function CastilhoFooter({ abas, paginaAtual, mudarPagina }) {
+function CastilhoFooter({
+    abas,
+    paginaAtual,
+    mudarPagina
+}) {
 
     // Indices das abas que a regra deixa aparecer
     function IndicesVisiveis() {
@@ -463,7 +455,12 @@ function AnexadorDeDocumentos() {
     );
 }
 
-function Assinante({ nome, email, cpf, onExcluirAssinante }) {
+function Assinante({
+    nome,
+    email,
+    cpf,
+    onExcluirAssinante
+}) {
     return (
         <div className="card" style={{ borderColor: "gray" }}>
             <div className="card-body">
@@ -480,7 +477,13 @@ function Assinante({ nome, email, cpf, onExcluirAssinante }) {
     );
 }
 
-function SelecionadorDeAssinantes({ Assinantes, onAdicionarAssinante, onExcluirAssinante, onCadastrarAssinante, listaAssinantes }) {
+function SelecionadorDeAssinantes({
+    Assinantes,
+    onAdicionarAssinante,
+    onExcluirAssinante,
+    onCadastrarAssinante,
+    listaAssinantes
+}) {
     const [AssinanteSelecionado, setAssinanteSelecionado] = useState("");
 
     function renderListaAssinantes() {
@@ -529,7 +532,9 @@ class CadastroNovoAssinante extends React.Component {
     }
 
     componentDidMount() {
-        $("[btn-criar-novo-assinante]").on("click", { onCriaAssinante: this.handleCriaAssinante }, function (e) {
+        $("[btn-criar-novo-assinante]").on("click", {
+            onCriaAssinante: this.handleCriaAssinante
+        }, function(e) {
             e.data.onCriaAssinante();
         });
     }
@@ -592,7 +597,10 @@ class CadastroNovoAssinante extends React.Component {
     }
 }
 
-function CpfInput({ onChange, value }) {
+function CpfInput({
+    onChange,
+    value
+}) {
     const handleCpfChange = (event) => {
         let value = event.target.value.replace(/\D/g, "");
 
@@ -677,7 +685,7 @@ function SelecionaTokenTAEMaisRecente(dsToken) {
     var melhorToken = null;
     var melhorExpiracao = null;
 
-    dsToken.values.forEach(function (linha) {
+    dsToken.values.forEach(function(linha) {
         var token = linha && linha.token;
         if (!token || String(token).indexOf("ERRO") === 0) return;
 
@@ -711,7 +719,7 @@ function FormataExpiracaoTAE(expiracao) {
 function MontaListaAssinantes(dadosTAE, linksPorEmail) {
     var lista = [];
 
-    (dadosTAE.assinantes || []).forEach(function (a) {
+    (dadosTAE.assinantes || []).forEach(function(a) {
         lista.push({
             nome: a.nome,
             email: a.email,
@@ -721,9 +729,11 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
         });
     });
 
-    (dadosTAE.pendentes || []).forEach(function (p) {
+    (dadosTAE.pendentes || []).forEach(function(p) {
         // Evita duplicar quem ja esta na lista de assinantes
-        if (lista.some(function (a) { return a.email == p.email; })) return;
+        if (lista.some(function(a) {
+                return a.email == p.email;
+            })) return;
         lista.push({
             nome: p.nome || "",
             email: p.email,
@@ -739,8 +749,10 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
         return doFormulario;
     }
 
-    lista.forEach(function (a) {
-        var informado = doFormulario.find(function (s) { return s.email == a.email; });
+    lista.forEach(function(a) {
+        var informado = doFormulario.find(function(s) {
+            return s.email == a.email;
+        });
         if (!informado) return;
 
         if (!a.nome) a.nome = informado.nome;
@@ -748,11 +760,11 @@ function MontaListaAssinantes(dadosTAE, linksPorEmail) {
     });
 
     // Garante nome visivel mesmo quando nao ha correspondencia no formulario
-    lista.forEach(function (a) {
+    lista.forEach(function(a) {
         if (!a.nome) a.nome = a.email;
     });
 
-    lista.forEach(function (a) {
+    lista.forEach(function(a) {
         a.link = (linksPorEmail && linksPorEmail[a.email]) || "";
     });
 
@@ -770,8 +782,14 @@ function AvisaFalhaDownload() {
 // Assinantes preenchidos no formulario, usados para complementar o retorno do TAE.
 function LeAssinantesDoFormulario() {
     try {
-        return (JSON.parse($("#jsonSigner").val()) || []).map(function (s) {
-            return { nome: s.nome, email: s.email, cpf: s.cpf, data: "", status: "Pendente" };
+        return (JSON.parse($("#jsonSigner").val()) || []).map(function(s) {
+            return {
+                nome: s.nome,
+                email: s.email,
+                cpf: s.cpf,
+                data: "",
+                status: "Pendente"
+            };
         });
     } catch (e) {
         return [];
@@ -785,7 +803,9 @@ function TraduzStatusEnvelope(dadosTAE) {
     var lista = MontaListaAssinantes(dadosTAE);
     if (lista.length === 0) return "Pendente";
 
-    var assinados = lista.filter(function (a) { return a.status == "Assinado"; }).length;
+    var assinados = lista.filter(function(a) {
+        return a.status == "Assinado";
+    }).length;
 
     if (assinados === lista.length) return "Assinado";
     if (assinados > 0) return "Assinado parcialmente";
@@ -832,7 +852,7 @@ function AssinaturaEletronica() {
                 setAssinatura(assinatura);
                 $("#hiddenStatusDocumento").val(assinatura.Status);
             })
-            .catch(() => { })
+            .catch(() => {})
             .finally(() => setCarregando(false));
 
         BuscaUrlDocumentoFluig().then((url) => setUrlDocumento(url));
@@ -875,7 +895,9 @@ function AssinaturaEletronica() {
                             success: (ds) => {
                                 var dadosRaw = ds && ds.values && ds.values[0] && ds.values[0].data;
                                 var dadosTAE = {};
-                                try { dadosTAE = JSON.parse(dadosRaw) || {}; } catch (e) { }
+                                try {
+                                    dadosTAE = JSON.parse(dadosRaw) || {};
+                                } catch (e) {}
 
                                 resolve({
                                     NomeArquivo: dadosTAE.nomeArquivo || $("#docName").val(),
@@ -913,7 +935,7 @@ function AssinaturaEletronica() {
             ], null, {
                 success: (ds) => {
                     var porEmail = {};
-                    ((ds && ds.values) || []).forEach(function (linha) {
+                    ((ds && ds.values) || []).forEach(function(linha) {
                         if (linha.email) porEmail[linha.email] = linha.link;
                     });
                     resolve(porEmail);
@@ -976,18 +998,22 @@ function AssinaturaEletronica() {
 
     function handleAbreModal() {
         if (!Assinatura) return;
-        ModalAssinantes = FLUIGC.modal(
-            {
+        ModalAssinantes = FLUIGC.modal({
                 title: Assinatura.NomeArquivo,
                 content: '<div id="rootAssinantes"></div>',
                 id: "ModalAssinantes",
                 size: "full",
-                actions: [{ label: "Cancelar", autoClose: true }]
+                actions: [{
+                    label: "Cancelar",
+                    autoClose: true
+                }]
             },
-            function (err) {
+            function(err) {
                 if (!err) {
                     ReactDOM.render(
-                        React.createElement(ListaAssinantes, { jsonAssinantes: Assinatura.jsonAssinantes }),
+                        React.createElement(ListaAssinantes, {
+                            jsonAssinantes: Assinatura.jsonAssinantes
+                        }),
                         document.querySelector("#rootAssinantes")
                     );
                 }
@@ -1064,7 +1090,9 @@ function AssinaturaEletronica() {
     );
 }
 
-function ListaAssinantes({ jsonAssinantes }) {
+function ListaAssinantes({
+    jsonAssinantes
+}) {
     return (
         <div style={{ overflowX: "auto" }}>
             <table className="table table-bordered">
