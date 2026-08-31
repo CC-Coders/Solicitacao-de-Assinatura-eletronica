@@ -153,6 +153,36 @@ function ValidaAntesDeEnviar() {
     return true;
 }
 
+function OcultarEnviarNativoFluig() {
+    try {
+        var p = window.parent;
+        var $btn = p.$("#send-process-button");
+        $btn.css({
+            position: "absolute",
+            left: "-9999px",
+            top: "0",
+            opacity: "0",
+            "pointer-events": "none"
+        });
+        return $btn.length > 0;
+    } catch (e) {
+        console.warn("OcultarEnviarNativoFluig:", e);
+        return false;
+    }
+}
+function AcionarEnvioFluig() {
+    try {
+        var btn = window.parent.document.getElementById("send-process-button");
+        if (!btn) {
+            console.warn("AcionarEnvioFluig: send-process-button nao encontrado");
+            return;
+        }
+        btn.click();
+    } catch (e) {
+        console.error("AcionarEnvioFluig:", e);
+    }
+}
+
 function hex2a(hexx) {
     var hex = hexx.toString();
     var str = '';
