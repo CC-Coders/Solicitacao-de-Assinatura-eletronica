@@ -2,9 +2,9 @@
   <ProcessDefinition>
     <processDefinitionPK>
       <companyId>1</companyId>
-      <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+      <processId>Solicitacao De Assinatura Eletronica</processId>
     </processDefinitionPK>
-    <processDescription>Solicitacao De Assinatura Eletronica WeSign</processDescription>
+    <processDescription>Solicitacao De Assinatura Eletronica</processDescription>
     <instruction></instruction>
     <active>true</active>
     <publicProcess>false</publicProcess>
@@ -28,8 +28,8 @@
   <ProcessDefinitionVersion>
     <processDefinitionVersionPK>
       <companyId>1</companyId>
-      <processId>Solicitacao De Assinatura Eletronica WeSign</processId>
-      <version>41</version>
+      <processId>Solicitacao De Assinatura Eletronica</processId>
+      <version>53</version>
     </processDefinitionVersionPK>
     <versionDescription></versionDescription>
     <formId>0</formId>
@@ -51,7 +51,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>4</sequence>
       </processStatePK>
@@ -101,7 +101,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>5</sequence>
       </processStatePK>
@@ -153,7 +153,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>23</sequence>
       </processStatePK>
@@ -205,7 +205,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>10</sequence>
       </processStatePK>
@@ -230,7 +230,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>15</sequence>
       </processStatePK>
@@ -255,7 +255,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>7</sequence>
       </processStatePK>
@@ -302,7 +302,7 @@
     <ProcessState>
       <processStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>11</sequence>
       </processStatePK>
@@ -351,9 +351,9 @@
     <ConditionProcessState>
       <conditionProcessStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <expressionOrder>1</expressionOrder>
-        <version>41</version>
+        <version>53</version>
         <sequence>10</sequence>
       </conditionProcessStatePK>
       <condition>false</condition>
@@ -363,9 +363,9 @@
     <ConditionProcessState>
       <conditionProcessStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <expressionOrder>2</expressionOrder>
-        <version>41</version>
+        <version>53</version>
         <sequence>10</sequence>
       </conditionProcessStatePK>
       <condition>false</condition>
@@ -375,9 +375,9 @@
     <ConditionProcessState>
       <conditionProcessStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <expressionOrder>1</expressionOrder>
-        <version>41</version>
+        <version>53</version>
         <sequence>15</sequence>
       </conditionProcessStatePK>
       <condition>false</condition>
@@ -387,9 +387,9 @@
     <ConditionProcessState>
       <conditionProcessStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <expressionOrder>2</expressionOrder>
-        <version>41</version>
+        <version>53</version>
         <sequence>15</sequence>
       </conditionProcessStatePK>
       <condition>false</condition>
@@ -399,9 +399,9 @@
     <ConditionProcessState>
       <conditionProcessStatePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <expressionOrder>3</expressionOrder>
-        <version>41</version>
+        <version>53</version>
         <sequence>15</sequence>
       </conditionProcessStatePK>
       <condition>false</condition>
@@ -415,7 +415,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>12</linkSequence>
       </processLinkPK>
@@ -432,7 +432,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>13</linkSequence>
       </processLinkPK>
@@ -449,7 +449,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>14</linkSequence>
       </processLinkPK>
@@ -466,7 +466,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>16</linkSequence>
       </processLinkPK>
@@ -483,7 +483,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>17</linkSequence>
       </processLinkPK>
@@ -500,7 +500,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>18</linkSequence>
       </processLinkPK>
@@ -517,7 +517,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>19</linkSequence>
       </processLinkPK>
@@ -534,7 +534,7 @@
     <ProcessLink>
       <processLinkPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <linkSequence>20</linkSequence>
       </processLinkPK>
@@ -558,7 +558,7 @@
       <workflowProcessEventPK>
         <companyId>1</companyId>
         <eventId>beforeTaskSave</eventId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
       </workflowProcessEventPK>
       <eventDescription>// TAE&#xd;
@@ -1122,7 +1122,6 @@ function AnexarDocumento(idDocumento) {&#xd;
 }&#xd;
 &#xd;
 // HISTORICO&#xd;
-// Grava uma linha na tabela filha a cada conclusao de tarefa&#xd;
 function RegistraHistorico(atividade) {&#xd;
     // Salvou sem avancar no fluxo: nao e movimentacao, nao registra&#xd;
     if (getValue(&quot;WKCompletTask&quot;) != &quot;true&quot;) {&#xd;
@@ -1185,7 +1184,7 @@ function DataHoraAtual() {&#xd;
       <parentSequence>0</parentSequence>
       <swimLanePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>1</sequence>
       </swimLanePK>
@@ -1201,7 +1200,7 @@ function DataHoraAtual() {&#xd;
       <parentSequence>1</parentSequence>
       <swimLanePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>2</sequence>
       </swimLanePK>
@@ -1217,7 +1216,7 @@ function DataHoraAtual() {&#xd;
       <parentSequence>1</parentSequence>
       <swimLanePK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
         <version>1</version>
         <sequence>3</sequence>
       </swimLanePK>
@@ -1229,8 +1228,8 @@ function DataHoraAtual() {&#xd;
     <ProcessLinkBend>
       <processLinkBendPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
-        <version>41</version>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
+        <version>53</version>
         <linkSequence>13</linkSequence>
         <bendSequence>1</bendSequence>
       </processLinkBendPK>
@@ -1240,8 +1239,8 @@ function DataHoraAtual() {&#xd;
     <ProcessLinkBend>
       <processLinkBendPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
-        <version>41</version>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
+        <version>53</version>
         <linkSequence>20</linkSequence>
         <bendSequence>1</bendSequence>
       </processLinkBendPK>
@@ -1251,8 +1250,8 @@ function DataHoraAtual() {&#xd;
     <ProcessLinkBend>
       <processLinkBendPK>
         <companyId>1</companyId>
-        <processId>Solicitacao De Assinatura Eletronica - WeSign</processId>
-        <version>41</version>
+        <processId>Solicitacao De Assinatura Eletronica</processId>
+        <version>53</version>
         <linkSequence>20</linkSequence>
         <bendSequence>2</bendSequence>
       </processLinkBendPK>
