@@ -493,14 +493,19 @@
         min-width: 0;
     }
 
-    /* Os botoes mantem o tamanho do texto, sem serem cortados */
     .linha-assinante .btn {
         flex-shrink: 0;
         white-space: nowrap;
+        height: 40px;
+        display: inline-flex;
+        align-items: center;
     }
 
-    /* ASSINANTE Card do assinante selecionado */
-    /* A altura vem do conteudo: com varios assinantes, altura fixa deixaria a coluna enorme */
+    .linha-assinante-select .ant-select-selector {
+        height: 40px !important;
+        display: flex !important;
+        align-items: center;
+    }
     .card-assinante {
         position: relative;
         display: flex;
