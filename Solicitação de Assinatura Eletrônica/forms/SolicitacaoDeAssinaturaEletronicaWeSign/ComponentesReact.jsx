@@ -161,11 +161,9 @@ function AppRoot() {
 
                 {PaginaAtual == "Dados Gerais" &&
                     <>
-                        <div className="panel panel-primary">
-                            <div className="panel-heading">
-                                <h3 className="panel-title">Assinatura Eletrônica</h3>
-                            </div>
-                            <div className="panel-body">
+                        <div className="sc">
+                            <div className="sc-head">Assinatura Eletrônica</div>
+                            <div className="sc-body">
                                 <div className="row">
                                     <div className="col-md-6">
                                         <AnexadorDeDocumentos />
@@ -278,11 +276,9 @@ function CastilhoHistorico({
 
 
 
-            <div className="panel panel-default" id="historico">
-                <div className="panel-heading">
-                    <h4 className="panel-title">Histórico</h4>
-                </div>
-                <div className="panel-body">
+            <div className="sc" id="historico">
+                <div className="sc-head">Histórico</div>
+                <div className="sc-body">
                     {linhas.length === 0 && (
                         <div className="historico-vazio">
                             <i className="flaticon flaticon-clock icon-md" aria-hidden="true"></i>
@@ -437,20 +433,43 @@ function AnexadorDeDocumentos() {
             })
             .catch();
     }
+    function handleVisualizar() {
+        $.ajax({
+            url: "/api/public/2.0/documents/getDownloadURL/" + $("#docId").val(),
+            contentType: "application/json",
+            method: "GET",
+            success: (retorno) => window.open(retorno.content, "_blank"),
+            error: () => FLUIGC.toast({ title: "Não foi possível abrir o documento.", message: "", type: "warning" })
+        });
+    }
+
+    var podeAnexar = $("#atividade").val() == "0" || $("#atividade").val() == "4";
+    var temDocumento = DescricaoDocumento && DescricaoDocumento != "Carregando.....";
 
     return (
-        <div>
-            <label htmlFor="">Selecione o Documento: </label>
-            <br />
-            {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
-                <a className="file-input-wrapper btn btn-primary">
-                    <i className="flaticon flaticon-upload icon-sm"></i>
-                    <span>Publicar documento</span>
-                    <input type="file" className="btn btn-default btn-sm btn-block" title="Carregar documentos" onChange={(e) => handleOnChangeFile(e)} />
-                </a>
-            )}
+        <div className="fg">
+            <label htmlFor="fileDocumento">Documento para Assinatura</label>
 
-            <span style={{ marginLeft: "10px" }}>{DescricaoDocumento}</span>
+            <input type="file" id="fileDocumento" name="fileDocumento" accept=".pdf"
+                style={{ display: "none" }} onChange={(e) => handleOnChangeFile(e)} />
+
+            <div className={"upload-area" + (temDocumento ? " uploaded" : "") + (podeAnexar ? "" : " disabled-upload")}
+                onClick={() => { if (podeAnexar) document.getElementById("fileDocumento").click(); }}>
+                <div className="upload-icon"><i className="flaticon flaticon-cloud-upload icon-md"></i></div>
+                <div className="upload-title">Documento para Assinatura</div>
+                <div className="upload-hint">{podeAnexar ? "Clique para selecionar" : "Documento anexado"}</div>
+                <div className="upload-formats">PDF</div>
+                {podeAnexar && <span className="upload-badge badge-req">Obrigatório</span>}
+            </div>
+
+            {temDocumento && (
+                <div className="upload-file-status">
+                    <span>{DescricaoDocumento}</span>
+                    <button type="button" className="btn-visualizar-anexo" onClick={() => handleVisualizar()}>
+                        Visualizar
+                    </button>
+                </div>
+            )}
         </div>
     );
 }
@@ -461,18 +480,31 @@ function Assinante({
     cpf,
     onExcluirAssinante
 }) {
+    // A inicial do nome vira o avatar circular, sem depender de imagem
+    var inicial = String(nome || "?").trim().charAt(0).toUpperCase();
+
     return (
-        <div className="card" style={{ borderColor: "gray" }}>
-            <div className="card-body">
-                <h3 className="card-title">{nome}</h3>
-                <p className="card-text">{email}</p>
-                <p className="card-text">{cpf}</p>
-                {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
-                    <button className="btn btn-danger" onClick={() => onExcluirAssinante(cpf)}>
-                        Remover <i className="flaticon flaticon-trash icon-sm" aria-hidden="true"></i>
-                    </button>
-                )}
+        <div className="card-assinante">
+            <div className="assinante-avatar">{inicial}</div>
+
+            <div className="assinante-dados">
+                <div className="assinante-nome">{nome}</div>
+                <div className="assinante-linha">
+                    <i className="flaticon flaticon-mail icon-sm" aria-hidden="true"></i>
+                    <span>{email}</span>
+                </div>
+                <div className="assinante-linha">
+                    <i className="flaticon flaticon-file-person icon-sm" aria-hidden="true"></i>
+                    <span>{cpf}</span>
+                </div>
             </div>
+
+            {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
+                <button type="button" className="assinante-remover" title="Remover assinante"
+                    onClick={() => onExcluirAssinante(cpf)}>
+                    <i className="flaticon flaticon-trash icon-sm" aria-hidden="true"></i>
+                </button>
+            )}
         </div>
     );
 }
@@ -492,12 +524,16 @@ function SelecionadorDeAssinantes({
     }
 
     return (
-        <div>
-            <label htmlFor="">Selecione o Assinante: </label>
+        <div className="fg">
+            <label htmlFor="">Selecione o Assinante</label>
+
             {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
-                <div style={{ display: "flex", alignItems: "center" }}>
-                    <Select style={{ width: "100%" }} options={listaAssinantes} value={AssinanteSelecionado} onChange={(e) => setAssinanteSelecionado(e)} filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())} showSearch />
+                <div className="linha-assinante">
+                    <div className="linha-assinante-select">
+                        <Select style={{ width: "100%" }} options={listaAssinantes} value={AssinanteSelecionado} onChange={(e) => setAssinanteSelecionado(e)} filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())} showSearch />
+                    </div>
                     <button
+                        type="button"
                         className="btn btn-success"
                         onClick={(e) => {
                             onAdicionarAssinante(AssinanteSelecionado);
@@ -506,12 +542,11 @@ function SelecionadorDeAssinantes({
                     >
                         Selecionar
                     </button>
-                    <button className="btn btn-info" onClick={() => AbreModalNovoAssinante(onCadastrarAssinante)}>
+                    <button type="button" className="btn btn-info" onClick={() => AbreModalNovoAssinante(onCadastrarAssinante)}>
                         Cadastrar Novo
                     </button>
                 </div>
             )}
-            <br />
 
             {renderListaAssinantes()}
         </div>
@@ -1023,28 +1058,26 @@ function AssinaturaEletronica() {
 
     if (carregando) {
         return (
-            <div className="panel panel-primary">
-                <div className="panel-heading"><h3 className="panel-title">Assinatura</h3></div>
-                <div className="panel-body" style={{ textAlign: "center" }}>Carregando...</div>
+            <div className="sc">
+                <div className="sc-head">Assinatura</div>
+                <div className="sc-body" style={{ textAlign: "center" }}>Carregando...</div>
             </div>
         );
     }
 
     if (!Assinatura) {
         return (
-            <div className="panel panel-primary">
-                <div className="panel-heading"><h3 className="panel-title">Assinatura</h3></div>
-                <div className="panel-body">Não foi possível carregar os dados da assinatura.</div>
+            <div className="sc">
+                <div className="sc-head">Assinatura</div>
+                <div className="sc-body">Não foi possível carregar os dados da assinatura.</div>
             </div>
         );
     }
 
     return (
-        <div className="panel panel-primary">
-            <div className="panel-heading">
-                <h3 className="panel-title">Assinatura</h3>
-            </div>
-            <div className="panel-body">
+        <div className="sc">
+            <div className="sc-head">Assinatura</div>
+            <div className="sc-body">
                 <table className="table table-bordered">
                     <thead>
                         <tr>
