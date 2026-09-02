@@ -271,7 +271,7 @@
 
     /* HISTÓRICO */
     .conteudo-historico {
-        margin: 0 auto;
+        margin: 0 20px;
     }
 
     .historico-titulo {
@@ -309,7 +309,7 @@
 
     /* Campo de observacao da movimentacao */
     .historico-obs {
-        margin-bottom: 24px;
+        margin: 0 20px 24px;
     }
 
     .historico-obs label {
@@ -397,30 +397,30 @@
     }
 
     #divLinhasHistorico .card-body {
-        padding: 15px;
+        padding: 12px;
         background: #fff;
         border: 1px solid #ddd;
         border-radius: 4px;
     }
 
     #divLinhasHistorico .divImageUser {
-        width: 60px;
-        height: 60px;
-        min-width: 60px;
+        width: 46px;
+        height: 46px;
+        min-width: 46px;
         background: #ececec;
         border-radius: 50%;
         overflow: hidden;
     }
 
     #divLinhasHistorico .userImage {
-        width: 60px;
-        height: 60px;
+        width: 46px;
+        height: 46px;
         border-radius: 50%;
         object-fit: cover;
     }
 
     #divLinhasHistorico .card-title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: #000;
         margin: 0 0 2px;
@@ -439,10 +439,10 @@
     }
 
     #divLinhasHistorico .card-text {
-        margin: 6px 0 0;
+        margin: 4px 0 0;
         color: #333;
-        font-size: 14px;
-        line-height: 1.55;
+        font-size: 13px;
+        line-height: 1.5;
         word-break: break-word;
     }
 

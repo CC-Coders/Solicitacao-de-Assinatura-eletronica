@@ -2,7 +2,7 @@ function createDataset(fields, constraints, sortFields) {
     try {
         var constraints = getConstraints(constraints);
 
-        var myQuery = "SELECT DISTINCT NOME, cEmail, email, cCPF, cpf FROM ML00144996";
+        var myQuery = "SELECT DISTINCT NOME, cEmail, email, cCPF, cpf FROM ML0017145";
         var retorno = executaQuery(myQuery, [], "/jdbc/AppDS");
 
         return returnDataset("SUCCESS","",JSON.stringify(retorno));

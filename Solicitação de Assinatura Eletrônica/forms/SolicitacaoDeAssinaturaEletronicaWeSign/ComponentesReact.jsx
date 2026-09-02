@@ -276,9 +276,11 @@ function CastilhoHistorico({
 
 
 
-            <div className="sc" id="historico">
-                <div className="sc-head">Histórico</div>
-                <div className="sc-body">
+            <div className="panel" id="historico">
+                <div className="panel-heading">
+                    <h3 className="panel-title">Histórico</h3>
+                </div>
+                <div className="panel-body">
                     {linhas.length === 0 && (
                         <div className="historico-vazio">
                             <i className="flaticon flaticon-clock icon-md" aria-hidden="true"></i>
