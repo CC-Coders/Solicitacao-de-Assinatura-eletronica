@@ -271,7 +271,7 @@
 
     /* HISTÓRICO */
     .conteudo-historico {
-        margin: 0 20px;
+        margin: 0 45px;
     }
 
     .historico-titulo {
@@ -309,7 +309,7 @@
 
     /* Campo de observacao da movimentacao */
     .historico-obs {
-        margin: 0 20px 24px;
+        margin: 0 45px 24px;
     }
 
     .historico-obs label {

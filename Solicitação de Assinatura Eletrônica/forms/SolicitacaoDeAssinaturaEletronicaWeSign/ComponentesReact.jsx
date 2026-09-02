@@ -284,6 +284,7 @@ function CastilhoHistorico({
                     {linhas.length === 0 && (
                         <div className="historico-vazio">
                             <i className="flaticon flaticon-clock icon-md" aria-hidden="true"></i>
+                            <br></br>
                             Nenhuma movimentação registrada até o momento.
                         </div>
                     )}
