@@ -109,6 +109,15 @@ function ChamarTAE(endpoint, method, token, params) {
     }
 
     if (statusCode != "200") {
+        var erros = resultado.errors || [];
+        for (var i = 0; i < erros.length; i++) {
+            if (String(erros[i]).indexOf("destinat") !== -1 && String(erros[i]).indexOf("repetido") !== -1) {
+                throw "Existem assinantes repetidos com o mesmo e-mail. " +
+                    "Cada assinante precisa ter um e-mail diferente. " +
+                    "Verifique a lista de assinantes antes de enviar.";
+            }
+        }
+
         throw "Erro na comunicacao com o TAE. HTTP " +
             statusCode +
             ". Retorno: " +
