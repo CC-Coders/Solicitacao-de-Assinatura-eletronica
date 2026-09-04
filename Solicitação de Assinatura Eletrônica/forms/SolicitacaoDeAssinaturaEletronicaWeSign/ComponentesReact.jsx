@@ -78,6 +78,7 @@ function AppRoot() {
                 nextAssinantes.push(assinante);
                 setAssinantes(nextAssinantes);
                 $("#jsonSigner").val(JSON.stringify(nextAssinantes));
+                GerenciarDestinatarioTAE("adicionar", assinante);
             } else {
                 //Caso esteja informa que o assinante já está incluido
                 FLUIGC.toast({
@@ -91,9 +92,51 @@ function AppRoot() {
 
     function handleExcluirAssinante(cpf) {
         var nextAssinantes = Assinantes.slice();
+        var removido = nextAssinantes.find((Assinante) => Assinante.cpf == cpf);
         nextAssinantes = nextAssinantes.filter((Assinante) => Assinante.cpf != cpf);
         $("#jsonSigner").val(JSON.stringify(nextAssinantes));
         setAssinantes(nextAssinantes);
+        if (removido) {
+            GerenciarDestinatarioTAE("remover", removido);
+        }
+    }
+    function GerenciarDestinatarioTAE(acao, assinante) {
+        var envelopeId = $("#taeEnvelopeId").val();
+        if (!envelopeId) return;
+
+        DatasetFactory.getDataset("dsLoginTokenTAE", null, null, null, {
+            success: (dsToken) => {
+                var token = SelecionaTokenTAEMaisRecente(dsToken);
+                if (!token) return;
+
+                var constraints = [
+                    DatasetFactory.createConstraint("envelopeId", envelopeId, envelopeId, ConstraintType.MUST),
+                    DatasetFactory.createConstraint("token", token, token, ConstraintType.MUST),
+                    DatasetFactory.createConstraint("acao", acao, acao, ConstraintType.MUST),
+                    DatasetFactory.createConstraint("email", assinante.email, assinante.email, ConstraintType.MUST)
+                ];
+                if (acao == "adicionar") {
+                    constraints.push(DatasetFactory.createConstraint("nome", assinante.nome, assinante.nome, ConstraintType.MUST));
+                    constraints.push(DatasetFactory.createConstraint("cpf", assinante.cpf, assinante.cpf, ConstraintType.MUST));
+                }
+
+                DatasetFactory.getDataset("dsTAEGerenciarDestinatario", null, constraints, null, {
+                    success: (ds) => {
+                        var status = ds && ds.values && ds.values[0] && ds.values[0].STATUS;
+                        if (status != "SUCCESS") {
+                            console.error("dsTAEGerenciarDestinatario:", ds && ds.values && ds.values[0]);
+                            FLUIGC.toast({
+                                title: "Nao foi possivel " + (acao == "adicionar" ? "adicionar" : "remover") + " o assinante no envelope ja publicado. A alteracao foi salva no formulario, mas pode ser necessario ajustar direto no TAE.",
+                                message: "",
+                                type: "warning"
+                            });
+                        }
+                    },
+                    error: (err) => console.error("Erro ao chamar dsTAEGerenciarDestinatario:", err)
+                });
+            },
+            error: (err) => console.error("Erro ao obter token TAE:", err)
+        });
     }
 
     function handleCadastrarAssinante(e) {
@@ -176,7 +219,7 @@ function AppRoot() {
                             </div>
                         </div>
                         <br />
-                        {$("#atividade").val() == "23" && <AssinaturaEletronica />}
+                        {["23", "7", "11"].indexOf($("#atividade").val()) !== -1 && <AssinaturaEletronica />}
                     </>
 
                 }
@@ -481,6 +524,7 @@ function Assinante({
     nome,
     email,
     cpf,
+    podeExcluir,
     onExcluirAssinante
 }) {
     // A inicial do nome vira o avatar circular, sem depender de imagem
@@ -502,7 +546,7 @@ function Assinante({
                 </div>
             </div>
 
-            {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
+            {podeExcluir && (
                 <button type="button" className="assinante-remover" title="Remover assinante"
                     onClick={() => onExcluirAssinante(cpf)}>
                     <i className="flaticon flaticon-trash icon-sm" aria-hidden="true"></i>
@@ -521,8 +565,10 @@ function SelecionadorDeAssinantes({
 }) {
     const [AssinanteSelecionado, setAssinanteSelecionado] = useState("");
 
+    var podeGerenciarAssinantes = ["0", "4", "5", "23"].indexOf($("#atividade").val()) !== -1;
+
     function renderListaAssinantes() {
-        var ListAssinantes = Assinantes.map((assinante) => <Assinante key={assinante.cpf} nome={assinante.nome} email={assinante.email} cpf={assinante.cpf} onExcluirAssinante={(e) => onExcluirAssinante(e)} />);
+        var ListAssinantes = Assinantes.map((assinante) => <Assinante key={assinante.cpf} nome={assinante.nome} email={assinante.email} cpf={assinante.cpf} podeExcluir={podeGerenciarAssinantes} onExcluirAssinante={(e) => onExcluirAssinante(e)} />);
         return ListAssinantes;
     }
 
@@ -530,7 +576,7 @@ function SelecionadorDeAssinantes({
         <div className="fg">
             <label htmlFor="">Selecione o Assinante</label>
 
-            {($("#atividade").val() == "0" || $("#atividade").val() == "4") && (
+            {podeGerenciarAssinantes && (
                 <div className="linha-assinante">
                     <div className="linha-assinante-select">
                         <Select style={{ width: "100%" }} options={listaAssinantes} value={AssinanteSelecionado} onChange={(e) => setAssinanteSelecionado(e)} filterOption={(input, option) => (option?.label ?? "").toLowerCase().includes(input.toLowerCase())} showSearch />
@@ -1114,7 +1160,7 @@ function AssinaturaEletronica() {
                     </tbody>
                 </table>
 
-                {Assinatura.Status == "Assinado" && (
+                {(Assinatura.Status == "Assinado" || ["7", "11"].indexOf($("#atividade").val()) !== -1) && (
                     <div style={{ textAlign: "center" }}>
                         <button type="button" className="btn btn-success" disabled={baixando} onClick={() => handleBaixarAssinado()}>
                             {baixando ? "Preparando download..." : "Baixar documento assinado"}
